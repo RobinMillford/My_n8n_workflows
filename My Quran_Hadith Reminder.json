@@ -1,0 +1,721 @@
+{
+  "name": "My Quran/Hadith Reminder",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 7
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -880,
+        -48
+      ],
+      "id": "a0eb323c-91a2-44a9-aeca-fb1d0cb42b58",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "const random = Math.random();\nif (random < 0.5) {\n  return [{ source: 'quran' }];\n} else {\n  return [{ source: 'hadith' }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -368,
+        -48
+      ],
+      "id": "1d9439d1-3342-42f8-9b69-0953a3da69d4",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "313e4a25-9bfa-40c7-890c-87d024897f0d",
+              "leftValue": "={{ $json.source }}",
+              "rightValue": "quran",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -112,
+        -48
+      ],
+      "id": "97791d1e-61cd-44cf-9bb2-c2f03774dbbd",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "url": "https://api.alquran.cloud/v1/ayah/random/en.asad",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        -144
+      ],
+      "id": "1a7e7ba1-09eb-453b-95ec-f9b93528e6f1",
+      "name": "HTTP Request (quran)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const books = [\n  { name: \"Sahih al-Bukhari\", slug: \"eng-bukhari\" },\n  { name: \"Sahih Muslim\", slug: \"eng-muslim\" },\n  { name: \"Jami At Tirmidhi\", slug: \"eng-tirmidhi\" },\n  { name: \"Sunan Abu Dawud\", slug: \"eng-abudawud\" },\n  { name: \"Sunan an-Nasai\", slug: \"eng-nasai\" },\n  { name: \"Sunan Ibn Majah\", slug: \"eng-ibnmajah\" },\n  { name: \"Muwatta Malik\", slug: \"eng-malik\" },\n  { name: \"Forty Hadith of an-Nawawi\", slug: \"eng-nawawi\" },\n  { name: \"Forty Hadith Qudsi\", slug: \"eng-qudsi\" }\n  // Removed Waliullah\n];\n\nconst randomBook = books[Math.floor(Math.random() * books.length)];\nreturn [{\n  json: {\n    book_name: randomBook.name,\n    api_url: `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${randomBook.slug}.json`\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        48,
+        192
+      ],
+      "id": "21156d99-183b-4c1d-a72c-d1356e96ddc9",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.api_url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        256,
+        192
+      ],
+      "id": "1ad88bf0-1291-49ff-84ef-f021d7ec0c65",
+      "name": "HTTP Request (Hadith)"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Get the full list of hadiths from the previous node.\nconst allHadiths = $json.hadiths || [];\n\n// 2. Get the 'book_name' from the earlier node in this branch.\n// !!! IMPORTANT: If your node is not named \"Code in JavaScript\",\n// you must change the name in the line below.\nconst bookName = $node[\"Code in JavaScript\"].json.book_name;\n\n// 3. Filter for short, motivational hadiths (under 500 chars).\nconst shortHadiths = allHadiths.filter(h => h.text.length < 1000 && h.text.length > 20);\n\n// 4. If no short hadiths are found in this book, stop this run.\nif (shortHadiths.length === 0) {\n  // Return nothing, which stops this branch of the workflow.\n  return null;\n}\n\n// 5. Pick one random hadith from the *short list*.\nconst randomIndex = Math.floor(Math.random() * shortHadiths.length);\nconst chosenHadith = shortHadiths[randomIndex];\n\n// 6. Create the clean, final output object.\n// This format {type, text, reference} will match the Quran path.\nconst output = {\n  type: \"hadith\",\n  text: chosenHadith.text,\n  reference: `${bookName}, Hadith ${chosenHadith.reference.hadith}`\n};\n\n// 7. Return the single, formatted object.\nreturn output;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        544,
+        192
+      ],
+      "id": "4147c806-bdf4-4902-9e92-bcdb2f171ca3",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Mode: Run Once for All Items\n\n// 1. Get the list of sent items (from the sheet)\nconst sentItems = $items.map(item => item.json);\n\n// 2. Get the new item (from the Get row(s) node's input)\nconst newItem = $node[\"Get row(s) in sheet\"].input.item.json;\nconst newReference = newItem.reference;\n\n// 3. Check if the reference was already sent\nconst alreadySent = sentItems.some(item => item.reference === newReference);\n\nif (alreadySent) {\n  // It's a duplicate!\n  // Return an object with a \"loop\" signal.\n  return { \"loop\": true };\n}\n\n// It's unique!\n// Add a \"loop\" signal (false) and pass the item on.\nnewItem.loop = false;\nreturn newItem;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1088,
+        512
+      ],
+      "id": "470b1827-a29b-41ab-9b40-fc2b0c58208e",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a wise, compassionate, and respectful guide. I am a recent graduate feeling stressed about my job search and personal challenges.\n\nPlease reflect on the following sacred text from the Quran or Hadith. Carefully and respectfully explain its practical life lesson for someone in my situation.\n\nText: \"{{ $json.text }}\"\nSource: ({{ $json.reference }})\n\nKeep the reflection inspiring, easy to understand, and concise (around 7-8 lines).\n\nFinally, at the very end, please explain the main lesson in a few simple, easily understandable Bengali words. (around 1-2 lines)"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        1424,
+        -256
+      ],
+      "id": "c23519f9-9b14-417c-9b71-e7b32797b874",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "E2M9PNgT9PMAmgHP",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// This node runs AFTER the 'HTTP Request (quran)' node.\n\n// 1. Get the 'data' object from the previous node's output.\nconst data = $json.data;\n\n// 2. Check if the data is valid.\nif (!data || !data.text) {\n  // Return nothing, which stops this branch of the workflow.\n  return null;\n}\n\n// 3. Create the clean, final output object.\n// This format {type, text, reference} will match the Hadith path.\nconst output = {\n  type: \"quran\",\n  text: data.text,\n  reference: `Surah ${data.surah.englishName}, Ayah ${data.numberInSurah}`\n};\n\n// 4. Return the single, formatted object.\nreturn output;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        528,
+        -144
+      ],
+      "id": "d1faae7f-9617-4f65-8d73-5edb802a6b3d",
+      "name": "Code in JavaScript4"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1lBmqsqQuM5IjAePZ57uEaL9Q66KsBEE9U6uBqmRn7II",
+          "mode": "list",
+          "cachedResultName": "Daily Verses Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lBmqsqQuM5IjAePZ57uEaL9Q66KsBEE9U6uBqmRn7II/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lBmqsqQuM5IjAePZ57uEaL9Q66KsBEE9U6uBqmRn7II/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        880,
+        512
+      ],
+      "id": "0c5eb5b4-a926-4ec6-9038-ade3d3769710",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oWPN42QJRLp9DqJv",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "1425297808",
+        "text": "={{ $json.final_message }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2448,
+        32
+      ],
+      "id": "2ff4376b-2a4e-430a-8c84-52ac95e2c9d6",
+      "name": "Send a text message",
+      "webhookId": "afceca9b-f507-4418-9673-d1babefcc78f",
+      "credentials": {
+        "telegramApi": {
+          "id": "vDvI8XAVdte8E7w9",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Get all items coming from the Merge node\nconst allItems = $input.all();\n\n// 2. Get the AI reflection\nconst aiItem = allItems[0].json;\nconst reflection = aiItem.content.parts[0].text;\n\n// 3. Get the original item\nconst dataItem = allItems[1].json;\nconst originalItem = dataItem.original_item;\n\n// 4. Build the final message (PLAIN TEXT, no HTML)\nconst final_message = `📜 Daily Reminder\n\n\"${originalItem.text}\"\n— ${originalItem.reference}\n\n💡 Reflection:\n${reflection}`;\n\n// 5. Return the message AND the original item\nreturn {\n  final_message: final_message,\n  original_item: originalItem\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2176,
+        32
+      ],
+      "id": "349b23e9-62e9-46d9-bf71-594b386a8057",
+      "name": "Code in JavaScript5"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "96eb35e2-d8b1-4b1d-9b05-3a5e519ce9b0",
+              "name": "original_item",
+              "value": "={{ $json }}",
+              "type": "object"
+            },
+            {
+              "id": "375755a7-9a33-488b-bf8f-7808560774fd",
+              "name": "=date",
+              "value": "={{ $now.toFormat(\"yyyy-MM-dd HH:mm\") }}",
+              "type": "string"
+            },
+            {
+              "id": "4d34eef9-0e99-4ab9-881a-115fa13b2261",
+              "name": "",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1312,
+        16
+      ],
+      "id": "fa6db44d-d50a-4143-ba86-6ec28541df6f",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1824,
+        48
+      ],
+      "id": "270ca8a5-a997-4c15-bea6-89b86506e992",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1lBmqsqQuM5IjAePZ57uEaL9Q66KsBEE9U6uBqmRn7II",
+          "mode": "list",
+          "cachedResultName": "Daily Verses Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lBmqsqQuM5IjAePZ57uEaL9Q66KsBEE9U6uBqmRn7II/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lBmqsqQuM5IjAePZ57uEaL9Q66KsBEE9U6uBqmRn7II/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "type": "={{ $json.type }}",
+            "text": "={{ $json.text }}",
+            "reference": "={{ $json.reference }}",
+            "date_sent": "={{ $json.date }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "reference",
+              "displayName": "reference",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "date_sent",
+              "displayName": "date_sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1488,
+        224
+      ],
+      "id": "81a93fc0-7e91-4eca-aa57-70ab0796c91a",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oWPN42QJRLp9DqJv",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Random Quess\nHere, I made a JavaScript logic for randomly choose between Quran and Hadith"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -432,
+        -272
+      ],
+      "typeVersion": 1,
+      "id": "e62a608b-c9c4-48ad-bf94-847d0e9d5ab7",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Refining the Response\nI have made here another script to fetch only main content of Quran or hadith with reference ",
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        288,
+        -336
+      ],
+      "typeVersion": 1,
+      "id": "6bfb7b1b-5c11-427c-aabe-a8eb756d0536",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Multiple Books for Hadith\nNine books serve as sources for hadith. The script choose Randomly choose one book on each workflow Execution.",
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        48,
+        16
+      ],
+      "typeVersion": 1,
+      "id": "3af4bfb5-891c-4cd8-9521-6082924a0c45",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## JSON Object\nIn Field edit, I am making Response as an Object and also adding date and time to store the verses in google sheets",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1088,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "44812821-4aa1-4793-af89-f2c2c0a92f7b",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Gemini Response\nDetailed prompt is given to analyse the Quran/Hadith verse and explain it in simple and easy terms ",
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1424,
+        -448
+      ],
+      "typeVersion": 1,
+      "id": "bec6cd22-3a7d-4fa8-bbbd-b1caa0138c32",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Merge and Message\nMerging both response of edit and Ai message nodes to easily generate a telegram message ",
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1808,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "d4bfd378-ce13-4416-a988-2f4fa7568fe8",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -624,
+        -48
+      ],
+      "id": "fc5d2490-827c-4b87-8808-b11a7880564a",
+      "name": "Wait",
+      "webhookId": "3ac19634-179a-4249-858b-7f01f09032fa"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "bf7afb5e-e000-4fb0-a399-2d437f52018f",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1312,
+        512
+      ],
+      "id": "ca65537f-939f-478c-b33c-3eea36eee94d",
+      "name": "If1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request (quran)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request (quran)": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request (Hadith)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request (Hadith)": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript4": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        []
+      ]
+    },
+    "Code in JavaScript5": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "errorWorkflow": "kXEIVv6ZuOZvu6nv"
+  },
+  "versionId": "365cdf97-017a-4457-bb00-c2ad83657c56",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "04411eb26930464323e8bb251dd1bb00547c7d1338f64896678ec46ead56da85"
+  },
+  "id": "kXEIVv6ZuOZvu6nv",
+  "tags": []
+}
