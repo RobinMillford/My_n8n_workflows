@@ -1,0 +1,1007 @@
+{
+  "name": "LinkedIn AI Job Notifier",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1216,
+        16
+      ],
+      "id": "f80e25fc-0e6d-43f2-848b-dc69f6fb0086",
+      "name": "Schedule Trigger1"
+    },
+    {
+      "parameters": {
+        "url": "https://rss.app/feeds/l8uJMhyzyWhJrPHs.xml",
+        "options": {
+          "customFields": ""
+        }
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -192,
+        -80
+      ],
+      "id": "835d970a-f0a7-4011-9384-00ba28311989",
+      "name": "Ml engineer"
+    },
+    {
+      "parameters": {
+        "url": "https://rss.app/feeds/T3pqOkwLy4ukmNJs.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -192,
+        -224
+      ],
+      "id": "5ffa85fe-6413-468d-b918-58b0b349b0dd",
+      "name": "Data Analysis"
+    },
+    {
+      "parameters": {
+        "url": "https://rss.app/feeds/f4dryt8LbMN0NtLS.xml",
+        "options": {
+          "customFields": ""
+        }
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -192,
+        96
+      ],
+      "id": "b5f46d65-e593-4c7e-94e7-7acb992dd925",
+      "name": "Data Scientist"
+    },
+    {
+      "parameters": {
+        "url": "https://rss.app/feeds/f4dryt8LbMN0NtLS.xml",
+        "options": {
+          "customFields": ""
+        }
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -192,
+        272
+      ],
+      "id": "d1185395-99bd-4f91-983a-882d71b0c711",
+      "name": "Software"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "https://drive.google.com/file/d/1AOkw9q3wraMQNSc6DcP6udlDR41ycoe4/view?usp=drive_link",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -784,
+        -160
+      ],
+      "id": "17a91909-032b-45f2-90f6-c2c40e26a05c",
+      "name": "Download file (Data Science)",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "0jNwrbXnRopBBBAC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "https://drive.google.com/file/d/1-8dtnLOxFS7DU6hxJfUk0tMtqp_oH0ql/view?usp=sharing",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -784,
+        32
+      ],
+      "id": "bd74238e-cef6-4330-8c53-c814778a4897",
+      "name": "Download file (Data Analysis)",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "0jNwrbXnRopBBBAC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "https://drive.google.com/file/d/1UDOAkzLP1MeaxR652MgM7Js7dj8T4uhA/view?usp=sharing",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -784,
+        208
+      ],
+      "id": "b80323fc-96a6-4709-8aaa-39cd4ef086fe",
+      "name": "Download file (AI)",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "0jNwrbXnRopBBBAC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        208,
+        64
+      ],
+      "id": "6d5bf36e-a8d3-4796-8e37-5e07893f18bd",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "9wxgumVVBegeGwSR",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        -192
+      ],
+      "id": "0ffff6a3-24f6-4f27-845e-908d6972c69c",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        0
+      ],
+      "id": "479f0ef2-7062-4f64-a04e-51fe54258285",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        224
+      ],
+      "id": "5ebcb75e-f99e-468c-8261-c4ffadd5d522",
+      "name": "Extract from File2"
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        208,
+        -288
+      ],
+      "id": "33d58547-3613-4c9b-a20c-f051ca7555b4",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "9wxgumVVBegeGwSR",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "moonshotai/kimi-k2-instruct",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        208,
+        816
+      ],
+      "id": "9bcb1c64-e3ed-403f-9532-eea1335d0532",
+      "name": "Groq Chat Model2",
+      "credentials": {
+        "groqApi": {
+          "id": "9wxgumVVBegeGwSR",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert HR recruiter. Please analyze the following RESUME and JOB DATA.\n\nYour task is to:\n1. Give a percentage match score from 0 to 100.\n2. Provide a brief, one-sentence reason for your score.\n3. Return the original job title.\n4. Return the original job link.\n5. Return the original job description snippet.\n\nPlease format your answer ONLY as a JSON object with five keys: \"match_score\", \"reason\", \"title\", \"link\", and \"description\". stricly follow the rule I said.\nexample:\n{\n  \"match_score\": 85,\n  \"reason\": \"A brief, one-sentence reason for the score.\",\n  \"title\": \"The Job Title\",\n  \"link\": \"https://job.link.com\",\n  \"description\": \"The full job description snippet...\"\n}\n\n---\nRESUME:\n{{ $('Extract from File').item.json.text }}\n---\nJOB DATA:\nTitle: {{ $json.title }}\nLink: {{ $json.link }}\nDescription: {{ $json.contentSnippet }}\n---",
+        "hasOutputParser": true,
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        208,
+        -112
+      ],
+      "id": "d7564b1b-e677-4e36-9e2f-db9c84ea69a3",
+      "name": "Basic LLM Chain (Data science)"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert HR recruiter. Please analyze the following RESUME and JOB DATA.\n\nYour task is to:\n1. Give a percentage match score from 0 to 100.\n2. Provide a brief, one-sentence reason for your score.\n3. Return the original job title.\n4. Return the original job link.\n5. Return the original job description snippet.\n\nPlease format your answer ONLY as a JSON object with five keys: \"match_score\", \"reason\", \"title\", \"link\", and \"description\". stricly follow the rule I said.\nexample:\n{\n  \"match_score\": 85,\n  \"reason\": \"A brief, one-sentence reason for the score.\",\n  \"title\": \"The Job Title\",\n  \"link\": \"https://job.link.com\",\n  \"description\": \"The full job description snippet...\"\n}\n\n---\nRESUME:\n{{ $('Extract from File1').item.json.text }}\n---\nJOB DATA:\nTitle: {{ $json.title }}\nLink: {{ $json.link }}\nDescription: {{ $json.contentSnippet }}\n---",
+        "hasOutputParser": true,
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        224,
+        -448
+      ],
+      "id": "9e32af40-ada2-48d6-b5c4-2d82bc2d35e7",
+      "name": "Basic LLM Chain (Data Analysis)"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert HR recruiter. Please analyze the following RESUME and JOB DATA.\n\nYour task is to:\n1. Give a percentage match score from 0 to 100.\n2. Provide a brief, one-sentence reason for your score.\n3. Return the original job title.\n4. Return the original job link.\n5. Return the original job description snippet.\n\nPlease format your answer ONLY as a JSON object with five keys: \"match_score\", \"reason\", \"title\", \"link\", and \"description\". stricly follow the rule I said\nexample:\n{\n  \"match_score\": 85,\n  \"reason\": \"A brief, one-sentence reason for the score.\",\n  \"title\": \"The Job Title\",\n  \"link\": \"https://job.link.com\",\n  \"description\": \"The full job description snippet...\"\n}\n\n\n---\nRESUME:\n{{ $('Extract from File2').item.json.text }}\n---\nJOB DATA:\nTitle: {{ $json.title }}\nLink: {{ $json.link }}\nDescription: {{ $json.contentSnippet }}\n---",
+        "hasOutputParser": true,
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        208,
+        608
+      ],
+      "id": "76a52c27-99ec-400b-a17b-e1808b405ad3",
+      "name": "Basic LLM Chain (Software)"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "49175c4d-8836-4cdc-97ef-be0818ff48e8",
+              "leftValue": "={{ $json.match_score }}",
+              "rightValue": 50,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        784,
+        -48
+      ],
+      "id": "cd41e7cd-4826-4323-a199-28c5bedf8c1a",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert HR recruiter. Please analyze the following RESUME and JOB DATA.\n\nYour task is to:\n1. Give a percentage match score from 0 to 100.\n2. Provide a brief, one-sentence reason for your score.\n3. Return the original job title.\n4. Return the original job link.\n5. Return the original job description snippet.\n\nPlease format your answer ONLY as a JSON object with five keys: \"match_score\", \"reason\", \"title\", \"link\", and \"description\". stricly follow the rule I said.\nexample:\n{\n  \"match_score\": 85,\n  \"reason\": \"A brief, one-sentence reason for the score.\",\n  \"title\": \"The Job Title\",\n  \"link\": \"https://job.link.com\",\n  \"description\": \"The full job description snippet...\"\n}\n\n---\nRESUME:\n{{ $('Extract from File').item.json.text }}\n---\nJOB DATA:\nTitle: {{ $json.title }}\nLink: {{ $json.link }}\nDescription: {{ $json.contentSnippet }}\n---",
+        "hasOutputParser": true,
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        208,
+        224
+      ],
+      "id": "c3494fab-a93e-4c2e-bf03-1e7a8773d2ef",
+      "name": "Basic LLM Chain (Data science)1"
+    },
+    {
+      "parameters": {
+        "model": "moonshotai/kimi-k2-instruct-0905",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        208,
+        448
+      ],
+      "id": "2965d2fb-6eda-41a0-84aa-68bf59a119ec",
+      "name": "Groq Chat Model3",
+      "credentials": {
+        "groqApi": {
+          "id": "9wxgumVVBegeGwSR",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1104,
+        32
+      ],
+      "id": "d206b3f6-88f0-49b7-a49f-7f591ae94ca4",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "chatId": "1425297808",
+        "text": "={{ $json.messageText }}",
+        "additionalFields": {
+          "appendAttribution": true
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1680,
+        48
+      ],
+      "id": "80cb11af-0d65-4921-841e-7208d621e35c",
+      "name": "Send a text message",
+      "webhookId": "5478bbba-9ec8-4ce0-bc99-3cad34d2fd18",
+      "credentials": {
+        "telegramApi": {
+          "id": "uV8KtdP1A2kX2mkH",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// This code runs ONCE FOR EACH job.\n// $json is the *single* matched job item.\nconst item = $json;\n\n// Get the data for this one job\nconst match_score = item.match_score || 'N/A';\nconst reason = item.reason || 'N/A';\nconst title = item.title || 'Title Was Not Found';\nconst link = item.link || null;\nlet description = item.description || 'No description found.';\n\n// Truncate the description to be safe (500 chars)\nif (description.length > 500) {\n  description = description.substring(0, 500) + \"...\";\n}\n\n// Build the message text for this single job\nlet jobMessage = `*${match_score}% Match: ${title}*\\n\\n`;\njobMessage += `*Reason:* ${reason}\\n\\n`;\nif (link) {\n  jobMessage += `[Click to Apply](${link})\\n\\n`;\n} else {\n  jobMessage += `(No link found)\\n\\n`;\n}\njobMessage += `*Description:* ${description}`;\n\n// Return a single object. The Telegram node will run for each one.\nreturn {\n  messageText: jobMessage\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1408,
+        64
+      ],
+      "id": "34b449d5-0bb7-4cc8-bffa-1dd395202b06",
+      "name": "Code in JavaScript",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Get the messy text from the AI\nconst messyText = $json.text;\n\n// This finds the LAST JSON object in the text.\n// This is the most reliable way to get the data.\nconst jsonMatch = messyText.match(/\\{[\\s\\S]*\\}\\s*$/);\n\nif (!jsonMatch) {\n  // If no JSON is found, return an error.\n  return { error: \"No JSON found in AI output\", text: messyText };\n}\n\ntry {\n  // Parse the JSON string into a real object\n  const parsedJson = JSON.parse(jsonMatch[0]);\n  \n  // Return the clean data\n  return parsedJson;\n\n} catch (e) {\n  // If the JSON is broken, return an error\n  return { error: \"Failed to parse JSON\", text: jsonMatch[0] };\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        576,
+        -96
+      ],
+      "id": "8f309a54-2a8f-4cd9-b875-c97973558855",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Get the messy text from the AI\nconst messyText = $json.text;\n\n// This finds the LAST JSON object in the text.\n// This is the most reliable way to get the data.\nconst jsonMatch = messyText.match(/\\{[\\s\\S]*\\}\\s*$/);\n\nif (!jsonMatch) {\n  // If no JSON is found, return an error.\n  return { error: \"No JSON found in AI output\", text: messyText };\n}\n\ntry {\n  // Parse the JSON string into a real object\n  const parsedJson = JSON.parse(jsonMatch[0]);\n  \n  // Return the clean data\n  return parsedJson;\n\n} catch (e) {\n  // If the JSON is broken, return an error\n  return { error: \"Failed to parse JSON\", text: jsonMatch[0] };\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        576,
+        240
+      ],
+      "id": "22b27087-46bc-452e-a4f4-90224970f679",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "49175c4d-8836-4cdc-97ef-be0818ff48e8",
+              "leftValue": "={{ $json.match_score }}",
+              "rightValue": 50,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        784,
+        256
+      ],
+      "id": "5d6507c9-a3f8-4e39-840a-aa7b4e6ce925",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Get the messy text from the AI\nconst messyText = $json.text;\n\n// This finds the LAST JSON object in the text.\n// This is the most reliable way to get the data.\nconst jsonMatch = messyText.match(/\\{[\\s\\S]*\\}\\s*$/);\n\nif (!jsonMatch) {\n  // If no JSON is found, return an error.\n  return { error: \"No JSON found in AI output\", text: messyText };\n}\n\ntry {\n  // Parse the JSON string into a real object\n  const parsedJson = JSON.parse(jsonMatch[0]);\n  \n  // Return the clean data\n  return parsedJson;\n\n} catch (e) {\n  // If the JSON is broken, return an error\n  return { error: \"Failed to parse JSON\", text: jsonMatch[0] };\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        608
+      ],
+      "id": "82498543-112a-4774-941e-a9511609fa60",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "49175c4d-8836-4cdc-97ef-be0818ff48e8",
+              "leftValue": "={{ $json.match_score }}",
+              "rightValue": 50,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        784,
+        608
+      ],
+      "id": "ac565b3a-3960-46fa-a6fc-4ee8d39c672e",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Get the messy text from the AI\nconst messyText = $json.text;\n\n// This finds the LAST JSON object in the text.\n// This is the most reliable way to get the data.\nconst jsonMatch = messyText.match(/\\{[\\s\\S]*\\}\\s*$/);\n\nif (!jsonMatch) {\n  // If no JSON is found, return an error.\n  return { error: \"No JSON found in AI output\", text: messyText };\n}\n\ntry {\n  // Parse the JSON string into a real object\n  const parsedJson = JSON.parse(jsonMatch[0]);\n  \n  // Return the clean data\n  return parsedJson;\n\n} catch (e) {\n  // If the JSON is broken, return an error\n  return { error: \"Failed to parse JSON\", text: jsonMatch[0] };\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        -432
+      ],
+      "id": "0e008840-a904-4000-a985-4d45381a84c0",
+      "name": "Code in JavaScript4"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "49175c4d-8836-4cdc-97ef-be0818ff48e8",
+              "leftValue": "={{ $json.match_score }}",
+              "rightValue": 50,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        784,
+        -320
+      ],
+      "id": "40354aea-af3f-45d5-bbef-a715da8319c9",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "content": "## Resume and Extraction\nI am calling my three different resumes from Google Drive and extracting the content from it"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -736,
+        -416
+      ],
+      "typeVersion": 1,
+      "id": "47a4652c-b9ac-45aa-9205-40f777509ea5",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## RSS Feed LinkedIn\nFour different Rss Feed of LinkedIn. Here each RSS feed is for different types of jobs.",
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -256,
+        -448
+      ],
+      "typeVersion": 1,
+      "id": "0533b034-3960-4b5b-8800-2e54f4fc3640",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Ai Analysis\nAnalysing my resumes with the Job descriptions and giving it a score and format the response in JSON with the javascript",
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        336,
+        -688
+      ],
+      "typeVersion": 1,
+      "id": "7cae3190-f34b-46ea-8c1f-9a4f620f3022",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Match\nChecking if my resume is 50 percent match with the job description and job is suitable for me or not ",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        752,
+        -528
+      ],
+      "typeVersion": 1,
+      "id": "99c166f5-03bd-4e45-a88d-11e93b6796ec",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Message\nMerging all the jobs and AI responses and made a JavaScript script to send the message on telegram",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1344,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "86b91087-1a84-4080-b6ab-d5fd53ca1ae3",
+      "name": "Sticky Note4"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Download file (Data Science)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Download file (Data Analysis)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Download file (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Scientist": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain (Data science)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ml engineer": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain (Data science)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Analysis": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain (Data Analysis)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file (Data Science)": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file (Data Analysis)": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file (AI)": {
+      "main": [
+        [
+          {
+            "node": "Extract from File2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain (Data science)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Ml engineer",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Data Scientist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "Data Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File2": {
+      "main": [
+        [
+          {
+            "node": "Software",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Software": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain (Software)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain (Data Analysis)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain (Software)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain (Data science)": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain (Software)": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain (Data Analysis)": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain (Data science)1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain (Data science)1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript4": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "errorWorkflow": "QOwXhqo2LD1Mvxdq"
+  },
+  "versionId": "abef8bdb-3dc5-497f-8de8-b821cc3d8243",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "04411eb26930464323e8bb251dd1bb00547c7d1338f64896678ec46ead56da85"
+  },
+  "id": "QOwXhqo2LD1Mvxdq",
+  "tags": []
+}
