@@ -1,108 +1,118 @@
----
+# ⚙️ n8n Workflow Collection
 
-## ⚙️ n8n Workflow Collection
+A curated collection of **n8n workflow templates** (`.json` files) for automating real-world tasks like AI-powered reminders, API integrations, and job notifications.
 
-This repository contains a collection of **n8n workflow templates** exported as `.json` files.
-You can import these workflows directly into your own n8n instance to automate different tasks such as data processing, API integrations, message scheduling, and AI workflows.
-
----
-
-### 🧩 What is n8n?
-
-[n8n](https://n8n.io) is a **workflow automation tool** that lets you connect APIs, services, and custom logic without writing boilerplate code.
-Each workflow is built with visual nodes that can send requests, process data, and trigger actions automatically.
+Each workflow is designed to demonstrate **practical automation skills** — including data handling, LLM integration, and process orchestration.
 
 ---
 
-### 🧠 What’s Inside This Repository
+## 🧩 What is n8n?
 
-Each `.json` file in this repo represents a **complete workflow** that can be imported into n8n.
+[n8n](https://n8n.io) is a **visual workflow automation platform** that lets you connect APIs, databases, and services with minimal code.  
+It’s open-source and extensible, making it perfect for both personal automation and production pipelines.
 
-For example:
+---
+
+## 🧠 What’s Inside
+
+Each `.json` file in this repository represents a **complete, ready-to-import workflow**.
 
 ```
+
 📦 n8n-workflows/
- ┣ 📄 LinkedIn AI Job Notifier.json
- ┣ 📄 My Quran_Hadith Reminder.json
+┣ 📄 LinkedIn_AI_Job_Notifier.json
+┣ 📄 Quran_Hadith_Reminder.json
+
+````
+
+### 1️⃣ LinkedIn AI Job Notifier
+
+This workflow:
+- Fetches job postings from **LinkedIn RSS feeds**
+- Uses an **AI model** to analyze job descriptions against multiple resumes
+- Sends **Telegram notifications** only for jobs that are a high match
+
+**File:** `LinkedIn_AI_Job_Notifier.json`  
+**Preview:**
+
+![LinkedIn AI Job Workflow](https://github.com/RobinMillford/My_n8n_workflows/blob/main/Linkedln_ai_job.png?raw=true)
+
+---
+
+### 2️⃣ Quran & Hadith Daily Reminder
+
+This workflow:
+- Sends a **daily Quran verse or Hadith** to Telegram
+- Uses an **AI reflection generator** for a meaningful daily reminder
+- Checks Google Sheets to **avoid duplicates**
+
+**File:** `Quran_Hadith_Reminder.json`  
+**Preview:**
+
+![Quran Hadith Workflow](https://github.com/RobinMillford/My_n8n_workflows/blob/main/Quran_Hadith_Reminder.png?raw=true)
+
+---
+
+## 🚀 How to Use These Workflows
+
+### **Step 1: Install n8n**
+
+You can run n8n locally or with Docker.
+
+#### Option A: Local (npm)
+```bash
+npm install -g n8n
+n8n start
+````
+
+#### Option B: Docker
+
+```bash
+docker run -it --rm \
+  -p 5678:5678 \
+  -v ~/.n8n:/home/node/.n8n \
+  n8nio/n8n
 ```
 
-You can pick any workflow you like and import it into your own setup.
+Once running, open your browser at 👉 [http://localhost:5678](http://localhost:5678)
 
 ---
 
-### 🚀 How to Use These Workflows
+### **Step 2: Import a Workflow**
 
-#### **Step 1: Install n8n**
-
-You can run n8n locally, in Docker, or on a hosted service.
-
-* **Local (npm):**
-
-  ```bash
-  npm install -g n8n
-  n8n start
-  ```
-
-* **Docker:**
-
-  ```bash
-  docker run -it --rm \
-    -p 5678:5678 \
-    -v ~/.n8n:/home/node/.n8n \
-    n8nio/n8n
-  ```
-
-Then open your browser and go to 👉 [http://localhost:5678](http://localhost:5678)
-
----
-
-#### **Step 2: Import the Workflow**
-
-1. Open the n8n dashboard
+1. Open your **n8n dashboard**
 2. Click **“Import from File”**
-3. Choose any `.json` workflow from this repository
-4. The workflow will appear in your workspace
+3. Select any `.json` file from this repository
+4. The workflow will appear ready to configure
 
 ---
 
-#### **Step 3: Configure Credentials**
+### **Step 3: Add Your Own Credentials**
 
-Some workflows require API keys or service connections (like Gmail, Slack, Groq, or Google Drive).
-If so:
+Some workflows use APIs like **Telegram, Gmail, Groq, or Google Drive**.
+These credentials are **never stored in the exported JSON** — you’ll need to re-add them.
 
-1. Open each node that shows a red ⚠️ (missing credential)
-2. Go to **Credentials → Add New**
-3. Enter your personal API key or connection details
+1. Open nodes with a ⚠️ warning
+2. Click **Credentials → Add New**
+3. Enter your API key or connection settings
 4. Save and close
 
 > 🔒 **Note:**
-> All credentials are stored **locally inside your n8n instance** — none of them are included in these `.json` files.
+> All credentials remain **local to your n8n instance**.
+> No sensitive data is included in these workflow files.
 
 ---
 
-#### **Step 4: Execute the Workflow**
+### **Step 4: Run the Workflow**
 
-Click **▶ Execute Workflow** in the top-right corner.
-You’ll see data flow through each node in real-time.
-
----
-
-### 💡 Optional Tips
-
-* You can **duplicate** a workflow to test variations
-* You can **connect workflows** together using the **Execute Workflow** node
-* You can **trigger** workflows with:
-
-  * Webhooks
-  * Cron jobs (scheduling)
-  * API calls
-  * Manual triggers
+Click **▶ Execute Workflow** to test.
+You’ll see live data flowing through each node in real time.
 
 ---
 
-### 🧾 Example Output
+## 🧾 Example Output
 
-Each workflow will produce structured JSON output, such as:
+Each workflow outputs structured data similar to:
 
 ```json
 {
@@ -114,29 +124,41 @@ Each workflow will produce structured JSON output, such as:
 
 ---
 
-### 🧰 Best Practices
+## 💡 Tips & Best Practices
 
-* Keep credentials private — do **not** commit `.env` or sensitive keys
-* Use descriptive workflow names
-* Add notes inside n8n for clarity
-* Export and back up workflows periodically
+* 🧠 **Duplicate workflows** to test safely
+* 🔗 **Connect workflows** with the **Execute Workflow** node
+* 🕒 Use **Cron triggers** for scheduling
+* 🌐 Use **Webhooks** or **API triggers** for event-based automation
+* 🔐 Never commit `.env` files or API keys
+* 💾 Backup your workflows periodically
 
 ---
 
-### 💼 For Recruiters / Reviewers
+## 💼 For Recruiters & Reviewers
 
 This repository showcases:
 
-* API integration and automation skills
-* Logical workflow design
-* Data transformation and LLM integration
-* Practical automation projects built using **n8n**
+✅ API & service integrations
+
+✅ Data processing & transformation
+
+✅ LLM (AI) integration for intelligent automation
+
+✅ Real, production-ready workflow design
+
+✅ Clear structure & clean documentation
 
 ---
 
-### 🏷 License
+## 🏷 License
 
-This repository is shared for educational and portfolio purposes.
-Feel free to fork, modify, or reuse workflows for personal projects.
+This repository is open for **educational and portfolio purposes**.
+Feel free to **fork**, **modify**, and **reuse** the workflows for personal learning or inspiration.
 
 ---
+
+### 🌟 Author
+
+**Yamin Hossain**
+📧 [LinkedIn](https://www.linkedin.com/in/yamin-hossain-38a3b3263/) | 💻 [GitHub](https://github.com/RobinMillford)
