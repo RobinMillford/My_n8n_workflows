@@ -20,10 +20,11 @@ Each `.json` file in this repository represents a **complete, ready-to-import wo
 ```
 
 📦 n8n-workflows/
-┣ 📄 LinkedIn_AI_Job_Notifier.json
-┣ 📄 Quran_Hadith_Reminder.json
+┣ 📄 Job Automation with Ai.json
+┣ 📄 LinkedIn\_AI\_Job\_Notifier.json
+┣ 📄 Quran\_Hadith\_Reminder.json
 
-````
+```
 
 ### 1️⃣ LinkedIn AI Job Notifier
 
@@ -50,6 +51,23 @@ This workflow:
 **Preview:**
 
 ![Quran Hadith Workflow](https://github.com/RobinMillford/My_n8n_workflows/blob/main/Quran_Hadith_Reminder.png?raw=true)
+
+---
+
+### 3️⃣ AI-Powered Job Application Assistant
+
+This is a comprehensive workflow that automates the entire job application process.
+- Accepts job details (text, image, or PDF) via a **simple n8n form**
+- Uses **AI (Gemini)** to parse the job post and extract key details (Title, Company)
+- Selects the correct resume from **Google Drive** and extracts its text
+- Uses a second **AI (Gemini)** call to write a professional, personalized email by matching the resume text to the job description
+- Sends the application via **Gmail** with the correct resume PDF attached
+- Logs the application as a new **to-do item on a specific Notion page**
+
+**File:** `Job Automation with Ai.json`  
+**Preview:**
+
+![AI Job Application Workflow](https://github.com/RobinMillford/My_n8n_workflows/blob/main/Job%20automation_ai.png?raw=true)
 
 ---
 
