@@ -1,0 +1,1911 @@
+{
+  "name": "Job Automation with Ai",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Job Apply",
+        "formDescription": "All of my Jobs that I applied from here",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Job Description"
+            },
+            {
+              "fieldLabel": "Image or pdf of job description",
+              "fieldType": "file"
+            },
+            {
+              "fieldLabel": "Resume",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Ai_Resume"
+                  },
+                  {
+                    "option": "Ml_resume"
+                  },
+                  {
+                    "option": "Data_Resume"
+                  },
+                  {
+                    "option": "Masters_resume"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -1856,
+        -48
+      ],
+      "id": "58c8a703-7d91-40f8-bc8b-b184c70012ab",
+      "name": "On form submission",
+      "webhookId": "68de12bb-9ba4-4329-b72b-7b26528e7e53"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.Resume }}",
+                    "rightValue": "Ai_Resume",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "9d6f8f50-f108-4ecd-be5c-da1cc974c79d"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "357d539d-1fe2-4c05-8f9f-2e17f8ddf3ce",
+                    "leftValue": "={{ $json.Resume }}",
+                    "rightValue": "Ml_resume",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0e2f7ee8-96b9-4810-bf6d-02e2eaf624a2",
+                    "leftValue": "={{ $json.Resume }}",
+                    "rightValue": "Data_Resume",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "16744b74-254f-4416-b1e8-538467649fc1",
+                    "leftValue": "={{ $json.Resume }}",
+                    "rightValue": "Masters_resume",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -48,
+        -80
+      ],
+      "id": "9a89caa3-7f1c-4f56-9d46-3376cc0104e8",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an expert data extractor. Analyze the following job post text and extract the job title, company name, company email, jobUrl (if any)  and the full job description (cleaned of any extra text like 'About Us' if it's not relevant but try to return the main points from job description if job description is big or longer).\n\nJob Post Text:\n{{ $json['Job Description'] }}\n\nRespond in this exact JSON format:\n{\n  \"jobTitle\": \"...\",\n  \"companyName\": \"...\",\n  \"CompanyEmail\": \"...\",\n  \"jobDescription\": \"...\"\n}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1168,
+        -160
+      ],
+      "id": "8f8c6403-059e-46f0-9c19-ee9c5013915c",
+      "name": "Message a model",
+      "retryOnFail": true,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "E2M9PNgT9PMAmgHP",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the full JSON output from the previous node\nconst inputData = $input.first().json;\n\n// 1. Drill down to the text string (which has markdown)\nconst jsonString = inputData.content.parts[0].text;\n\n// 2. Find the start and end of the actual JSON\nconst startIndex = jsonString.indexOf('{');\nconst endIndex = jsonString.lastIndexOf('}') + 1;\n\n// 3. Slice out the clean JSON string\nconst cleanJsonString = jsonString.slice(startIndex, endIndex);\n\n// 4. Parse the clean, valid JSON object\nconst parsedData = JSON.parse(cleanJsonString);\n\n// 5. Return the clean, parsed data for the next nodes\nreturn parsedData;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -736,
+        48
+      ],
+      "id": "c0efcbad-58b4-4176-8e91-08e6c96ade5c",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4fb74ea8-c365-4c2d-a752-132257243086",
+              "name": "jobTitle",
+              "value": "={{ $json.jobTitle }}",
+              "type": "string"
+            },
+            {
+              "id": "ec692945-96c6-461f-b75f-55542bad866e",
+              "name": "companyName",
+              "value": "={{ $json.companyName }}",
+              "type": "string"
+            },
+            {
+              "id": "fe5cfd56-b0a3-49d2-9939-a3870dcbce04",
+              "name": "CompanyEmail",
+              "value": "={{ $json.CompanyEmail }}",
+              "type": "string"
+            },
+            {
+              "id": "1acde2ed-3e29-4a42-9ff8-b484042b6942",
+              "name": "jobDescription",
+              "value": "={{ $json.jobDescription }}",
+              "type": "string"
+            },
+            {
+              "id": "9acf5561-26ef-4c40-af5c-5f806ba226de",
+              "name": "Resume",
+              "value": "={{ $('On form submission').item.json.Resume }}",
+              "type": "string"
+            },
+            {
+              "id": "5a37c4b4-b4ee-4459-be58-148de1c48306",
+              "name": "submittedAt",
+              "value": "={{ $('On form submission').item.json.submittedAt }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -288,
+        -32
+      ],
+      "id": "c39c310f-b449-4462-acf1-2b38ffd4741e",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "https://drive.google.com/file/d/1PLSPd0FWI8OuHPHg_kofLXV-C4qItgWY/view?usp=sharing",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        160,
+        176
+      ],
+      "id": "41655350-f07b-48c8-b7e9-fc231fb1ff81",
+      "name": "Full CV",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "0jNwrbXnRopBBBAC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "https://drive.google.com/file/d/1-8dtnLOxFS7DU6hxJfUk0tMtqp_oH0ql/view?usp=sharing",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        160,
+        -48
+      ],
+      "id": "e643edb8-c751-4b46-882d-573e519fdf5e",
+      "name": "Data Analytics",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "0jNwrbXnRopBBBAC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "https://drive.google.com/file/d/1AOkw9q3wraMQNSc6DcP6udlDR41ycoe4/view?usp=drive_link",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        160,
+        -240
+      ],
+      "id": "15de0909-fbff-4d7a-af08-4cfd159aefda",
+      "name": "ML / Data Science",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "0jNwrbXnRopBBBAC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "https://drive.google.com/file/d/1UDOAkzLP1MeaxR652MgM7Js7dj8T4uhA/view?usp=sharing",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        160,
+        -496
+      ],
+      "id": "2071606c-f271-448d-8646-622a2bea9d71",
+      "name": "Al Jobs",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "0jNwrbXnRopBBBAC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "eb40b7e9-4201-4955-873f-5dc54aeab02b",
+              "leftValue": "={{ $json['Job Description'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1632,
+        -48
+      ],
+      "id": "d2787f9c-867e-438d-9c2f-ab4e72bb9947",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "text": "=You are an expert data extractor. Analyze the following job post Image and extract the job title, company name, company email, jobUrl (if any)  and the full job description (cleaned of any extra text like 'About Us' if it's not relevant but try to return the main points from job description if job description is big or longer).\n\nJob Post Text:\n{{ $json['Job Description'] }}\n\nRespond in this exact JSON format:\n{\n  \"jobTitle\": \"...\",\n  \"companyName\": \"...\",\n  \"CompanyEmail\": \"...\",\n  \"jobDescription\": \"...\"\n}",
+        "inputType": "binary",
+        "binaryPropertyName": "Image_or_pdf_of_job_description",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1120,
+        48
+      ],
+      "id": "f7db21f1-3905-4973-b8f9-0708ded6b6d3",
+      "name": "Analyze an image",
+      "retryOnFail": true,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "E2M9PNgT9PMAmgHP",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json[\"Image or pdf of job description\"][0].mimetype }}",
+                    "rightValue": "image/png",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "1a21f304-8b16-45b0-87e8-08e0fb74557b"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "8384b7a5-6e69-4783-9822-7abc2df4fe16",
+                    "leftValue": "={{ $json[\"Image or pdf of job description\"][0].mimetype }}",
+                    "rightValue": "application/pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -1456,
+        160
+      ],
+      "id": "068d82e2-3acc-4f12-a06c-a1b9262f3484",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "resource": "document",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "text": "=You are an expert data extractor. Analyze the following job post document and extract the job title, company name, company email, jobUrl (if any)  and the full job description (cleaned of any extra text like 'About Us' if it's not relevant but try to return the main points from job description if job description is big or longer).\n\nJob Post Text:\n{{ $json['Job Description'] }}\n\nRespond in this exact JSON format:\n{\n  \"jobTitle\": \"...\",\n  \"companyName\": \"...\",\n  \"CompanyEmail\": \"...\",\n  \"jobDescription\": \"...\"\n}",
+        "inputType": "binary",
+        "binaryPropertyName": "Image_or_pdf_of_job_description",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1104,
+        256
+      ],
+      "id": "6d043036-82c8-44dd-a8ad-edc01a72b61b",
+      "name": "Analyze document",
+      "retryOnFail": true,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "E2M9PNgT9PMAmgHP",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        336,
+        -48
+      ],
+      "id": "6b4ba818-9e64-4116-9319-a9056fe33c20",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        336,
+        -240
+      ],
+      "id": "71cc23cd-fc59-47c5-9fdf-fb6130178da3",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        336,
+        -512
+      ],
+      "id": "2b7c1f5c-5bbc-4b23-bf12-677ec4e4c675",
+      "name": "Extract from File2"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.CompanyEmail }}",
+        "subject": "={{ $json.Subject }}",
+        "emailType": "text",
+        "message": "={{ $json.emailBody }}",
+        "options": {
+          "appendAttribution": false,
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1936,
+        -480
+      ],
+      "id": "9b7ff440-119f-42c0-9bc2-7969aadc3156",
+      "name": "Send a message",
+      "webhookId": "d0052178-eb65-491b-960c-23be904b588f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WNKh4ftUPg25TT4b",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f0ac26c0-bb0f-4172-8d5d-2ac8d409edd2",
+              "name": "Subject",
+              "value": "={{ $json.Subject }}",
+              "type": "string"
+            },
+            {
+              "id": "c80882ba-03d6-458d-bded-c55f7f8fbbca",
+              "name": "emailBody",
+              "value": "={{ $json.emailBody }}",
+              "type": "string"
+            },
+            {
+              "id": "3fc296d8-4ec7-426f-bdef-2bc2bb046a5b",
+              "name": "CompanyEmail",
+              "value": "={{ $('Code in JavaScript').item.json.CompanyEmail }}",
+              "type": "string"
+            },
+            {
+              "id": "c5a5017a-4690-464b-927c-122d0f7ae60f",
+              "name": "jobDescription",
+              "value": "={{ $('Code in JavaScript').item.json.jobDescription }}",
+              "type": "string"
+            },
+            {
+              "id": "9f1bff2c-4cec-46f8-b9b3-63ac54736903",
+              "name": "Resume",
+              "value": "={{ $('On form submission').item.json.Resume }}",
+              "type": "string"
+            },
+            {
+              "id": "35a91ca2-6b3d-4e2d-af88-b0599b55e39e",
+              "name": "submittedAt",
+              "value": "={{ $('On form submission').item.json.submittedAt }}",
+              "type": "string"
+            },
+            {
+              "id": "30556617-3de1-4760-b683-cf7c612c99c3",
+              "name": "jobTitle",
+              "value": "={{ $('Edit Fields').item.json.jobTitle }}",
+              "type": "string"
+            },
+            {
+              "id": "a611dee5-0661-4382-8773-7027bcd6f90b",
+              "name": "companyName",
+              "value": "={{ $('Edit Fields').item.json.companyName }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1296,
+        -480
+      ],
+      "id": "188d1dc8-23a2-4d3c-bc53-eb259a0e9a22",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bfe1d0fe-f733-42da-8a94-234cc0f40a12",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "50c84769-7973-4f64-b6d5-5a40d53009d4",
+              "name": "jobTitle",
+              "value": "={{ $('Code in JavaScript').item.json.jobTitle }}",
+              "type": "string"
+            },
+            {
+              "id": "c3a6f1c3-4894-40ad-993c-b06fcfa6a71d",
+              "name": "companyName",
+              "value": "={{ $('Code in JavaScript').item.json.companyName }}",
+              "type": "string"
+            },
+            {
+              "id": "c22f4e4e-55f1-4e1d-a351-7a1e2f29c89c",
+              "name": "CompanyEmail",
+              "value": "={{ $('Code in JavaScript').item.json.CompanyEmail }}",
+              "type": "string"
+            },
+            {
+              "id": "28599ee6-6292-4ba5-94de-ecc89333be1a",
+              "name": "jobDescription",
+              "value": "={{ $('Code in JavaScript').item.json.jobDescription }}",
+              "type": "string"
+            },
+            {
+              "id": "5d5439fa-b1d7-4a8f-89d3-2ba6535ffb07",
+              "name": "submittedAt",
+              "value": "={{ $('Edit Fields').item.json.submittedAt }}",
+              "type": "string"
+            },
+            {
+              "id": "9c5cf899-fc29-47c1-8592-05fcc0061d40",
+              "name": "Resume",
+              "value": "={{ $('Edit Fields').item.json.Resume }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        528,
+        -512
+      ],
+      "id": "f583f816-51ad-47d6-8432-bdfe63102e25",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the full JSON output from the previous node\nconst inputData = $input.first().json;\n\n// 1. Drill down to the text string (which has markdown)\nconst jsonString = inputData.content.parts[0].text;\n\n// 2. Find the start and end of the actual JSON\nconst startIndex = jsonString.indexOf('{');\nconst endIndex = jsonString.lastIndexOf('}') + 1;\n\n// 3. Slice out the clean JSON string\nconst cleanJsonString = jsonString.slice(startIndex, endIndex);\n\n// 4. Parse the clean, valid JSON object\nconst parsedData = JSON.parse(cleanJsonString);\n\n// 5. Return the clean, parsed data for the next nodes\nreturn parsedData;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        -480
+      ],
+      "id": "cd39b2c5-5248-4a05-b09c-98a96664b928",
+      "name": "Code in JavaScript4"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "https://drive.google.com/file/d/1UDOAkzLP1MeaxR652MgM7Js7dj8T4uhA/view?usp=sharing",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1472,
+        -464
+      ],
+      "id": "2a8157e9-fb22-450c-ac11-96c68012b1c5",
+      "name": "Al Jobs1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "0jNwrbXnRopBBBAC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an expert career assistant. Your task is to write a highly professional, concise, and personalized email for a job application.\n\nYour primary goal is to *synthesize* the company's needs (from the `Job Description`) with my qualifications (from `My Resume Text`), demonstrating a clear and specific match.\n\n**Context:**\n* **My Resume Text:**\n    {{ $json.text }}\n* **Job Title:**\n    {{ $json.jobTitle }}\n* **Company Name:**\n    {{ $json.companyName }}\n* **Job Description:**\n    {{ $json.jobDescription }}\n\n**Instructions:**\n1.  **Be Professional and Specific:** Address the hiring team (e.g., \"Dear {{ $json.companyName }} Team,\" or \"Dear Hiring Manager,\"). Clearly state the `jobTitle` I am applying for.\n2.  **Focus on the Match (Most Important):** Do not just list my skills. Instead, pick 1-2 key requirements from the `Job Description` and show how my experience from `My Resume Text` directly fulfills those requirements.\n    * **Good Example:** \"I see you require 3+ years of automation testing. In my role at [My Past Company], I successfully designed and implemented an automation framework using [My Skill] that reduced testing time by 30%.\"\n    * **Bad Example:** \"My resume shows I have skills in Python, SQL, and automation.\"\n3.  **Keep it Concise:** 3-4 short paragraphs maximum.\n4.  **Conclude Professionally:** Conclude by stating that my resume is attached for their review and that I am eager to discuss how I can contribute to their team. Do **not** mention the resume's file name (e.g., \"AI_Resume\").\n\n**Output Format:**\nRespond with ONLY a valid JSON object in this exact format:\n{\n  \"Subject\": \"Application for {{ $json.jobTitle }} - Yamin Hossain\",\n  \"emailBody\": \"...\"\n}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        768,
+        -480
+      ],
+      "id": "5e40f47a-3945-4d61-ab96-47980c2ad3a3",
+      "name": "Message a model2",
+      "retryOnFail": true,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "E2M9PNgT9PMAmgHP",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bfe1d0fe-f733-42da-8a94-234cc0f40a12",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "50c84769-7973-4f64-b6d5-5a40d53009d4",
+              "name": "jobTitle",
+              "value": "={{ $('Code in JavaScript').item.json.jobTitle }}",
+              "type": "string"
+            },
+            {
+              "id": "c3a6f1c3-4894-40ad-993c-b06fcfa6a71d",
+              "name": "companyName",
+              "value": "={{ $('Code in JavaScript').item.json.companyName }}",
+              "type": "string"
+            },
+            {
+              "id": "c22f4e4e-55f1-4e1d-a351-7a1e2f29c89c",
+              "name": "CompanyEmail",
+              "value": "={{ $('Code in JavaScript').item.json.CompanyEmail }}",
+              "type": "string"
+            },
+            {
+              "id": "28599ee6-6292-4ba5-94de-ecc89333be1a",
+              "name": "jobDescription",
+              "value": "={{ $('Code in JavaScript').item.json.jobDescription }}",
+              "type": "string"
+            },
+            {
+              "id": "5d5439fa-b1d7-4a8f-89d3-2ba6535ffb07",
+              "name": "submittedAt",
+              "value": "={{ $('Edit Fields').item.json.submittedAt }}",
+              "type": "string"
+            },
+            {
+              "id": "9c5cf899-fc29-47c1-8592-05fcc0061d40",
+              "name": "Resume",
+              "value": "={{ $('Edit Fields').item.json.Resume }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        544,
+        -240
+      ],
+      "id": "a36558c5-b283-4603-a200-0c2de57d3c55",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an expert career assistant. Your task is to write a highly professional, concise, and personalized email for a job application.\n\nYour primary goal is to *synthesize* the company's needs (from the `Job Description`) with my qualifications (from `My Resume Text`), demonstrating a clear and specific match.\n\n**Context:**\n* **My Resume Text:**\n    {{ $json.text }}\n* **Job Title:**\n    {{ $json.jobTitle }}\n* **Company Name:**\n    {{ $json.companyName }}\n* **Job Description:**\n    {{ $json.jobDescription }}\n\n**Instructions:**\n1.  **Be Professional and Specific:** Address the hiring team (e.g., \"Dear {{ $json.companyName }} Team,\" or \"Dear Hiring Manager,\"). Clearly state the `jobTitle` I am applying for.\n2.  **Focus on the Match (Most Important):** Do not just list my skills. Instead, pick 1-2 key requirements from the `Job Description` and show how my experience from `My Resume Text` directly fulfills those requirements.\n    * **Good Example:** \"I see you require 3+ years of automation testing. In my role at [My Past Company], I successfully designed and implemented an automation framework using [My Skill] that reduced testing time by 30%.\"\n    * **Bad Example:** \"My resume shows I have skills in Python, SQL, and automation.\"\n3.  **Keep it Concise:** 3-4 short paragraphs maximum.\n4.  **Conclude Professionally:** Conclude by stating that my resume is attached for their review and that I am eager to discuss how I can contribute to their team. Do **not** mention the resume's file name (e.g., \"Ml_resume\").\n\n**Output Format:**\nRespond with ONLY a valid JSON object in this exact format:\n{\n  \"Subject\": \"Application for {{ $json.jobTitle }} - Yamin Hossain\",\n  \"emailBody\": \"...\"\n}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        752,
+        -256
+      ],
+      "id": "6753c695-a884-40d4-8298-f357eb3884fc",
+      "name": "Message a model3",
+      "retryOnFail": true,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "E2M9PNgT9PMAmgHP",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the full JSON output from the previous node\nconst inputData = $input.first().json;\n\n// 1. Drill down to the text string (which has markdown)\nconst jsonString = inputData.content.parts[0].text;\n\n// 2. Find the start and end of the actual JSON\nconst startIndex = jsonString.indexOf('{');\nconst endIndex = jsonString.lastIndexOf('}') + 1;\n\n// 3. Slice out the clean JSON string\nconst cleanJsonString = jsonString.slice(startIndex, endIndex);\n\n// 4. Parse the clean, valid JSON object\nconst parsedData = JSON.parse(cleanJsonString);\n\n// 5. Return the clean, parsed data for the next nodes\nreturn parsedData;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        -256
+      ],
+      "id": "da789e49-da59-4361-8420-1adfe7c7157f",
+      "name": "Code in JavaScript5"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f0ac26c0-bb0f-4172-8d5d-2ac8d409edd2",
+              "name": "Subject",
+              "value": "={{ $json.Subject }}",
+              "type": "string"
+            },
+            {
+              "id": "c80882ba-03d6-458d-bded-c55f7f8fbbca",
+              "name": "emailBody",
+              "value": "={{ $json.emailBody }}",
+              "type": "string"
+            },
+            {
+              "id": "3fc296d8-4ec7-426f-bdef-2bc2bb046a5b",
+              "name": "CompanyEmail",
+              "value": "={{ $('Code in JavaScript').item.json.CompanyEmail }}",
+              "type": "string"
+            },
+            {
+              "id": "c5a5017a-4690-464b-927c-122d0f7ae60f",
+              "name": "jobDescription",
+              "value": "={{ $('Code in JavaScript').item.json.jobDescription }}",
+              "type": "string"
+            },
+            {
+              "id": "9f1bff2c-4cec-46f8-b9b3-63ac54736903",
+              "name": "Resume",
+              "value": "={{ $('On form submission').item.json.Resume }}",
+              "type": "string"
+            },
+            {
+              "id": "35a91ca2-6b3d-4e2d-af88-b0599b55e39e",
+              "name": "submittedAt",
+              "value": "={{ $('On form submission').item.json.submittedAt }}",
+              "type": "string"
+            },
+            {
+              "id": "6aec0b6d-bc1f-4ebd-9861-9b6db67645cb",
+              "name": "jobTitle",
+              "value": "={{ $('Edit Fields').item.json.jobTitle }}",
+              "type": "string"
+            },
+            {
+              "id": "396ee33b-4a7d-4f58-93c4-619e4484568c",
+              "name": "companyName",
+              "value": "={{ $('Edit Fields').item.json.companyName }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1312,
+        -256
+      ],
+      "id": "4cb4daf2-b7a1-401a-95fc-17aec50d1bf8",
+      "name": "Edit Fields6"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "https://drive.google.com/file/d/1AOkw9q3wraMQNSc6DcP6udlDR41ycoe4/view?usp=drive_link",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1488,
+        -272
+      ],
+      "id": "45b40950-20fa-4dc0-b1af-3a820b649328",
+      "name": "ML / Data Science1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "0jNwrbXnRopBBBAC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bfe1d0fe-f733-42da-8a94-234cc0f40a12",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "50c84769-7973-4f64-b6d5-5a40d53009d4",
+              "name": "jobTitle",
+              "value": "={{ $('Code in JavaScript').item.json.jobTitle }}",
+              "type": "string"
+            },
+            {
+              "id": "c3a6f1c3-4894-40ad-993c-b06fcfa6a71d",
+              "name": "companyName",
+              "value": "={{ $('Code in JavaScript').item.json.companyName }}",
+              "type": "string"
+            },
+            {
+              "id": "c22f4e4e-55f1-4e1d-a351-7a1e2f29c89c",
+              "name": "CompanyEmail",
+              "value": "={{ $('Code in JavaScript').item.json.CompanyEmail }}",
+              "type": "string"
+            },
+            {
+              "id": "28599ee6-6292-4ba5-94de-ecc89333be1a",
+              "name": "jobDescription",
+              "value": "={{ $('Code in JavaScript').item.json.jobDescription }}",
+              "type": "string"
+            },
+            {
+              "id": "5d5439fa-b1d7-4a8f-89d3-2ba6535ffb07",
+              "name": "submittedAt",
+              "value": "={{ $('Edit Fields').item.json.submittedAt }}",
+              "type": "string"
+            },
+            {
+              "id": "9c5cf899-fc29-47c1-8592-05fcc0061d40",
+              "name": "Resume",
+              "value": "={{ $('Edit Fields').item.json.Resume }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        544,
+        -48
+      ],
+      "id": "b823b788-56c3-427e-bb8c-d45e7ecb6a21",
+      "name": "Edit Fields7"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an expert career assistant. Your task is to write a highly professional, concise, and personalized email for a job application.\n\nYour primary goal is to *synthesize* the company's needs (from the `Job Description`) with my qualifications (from `My Resume Text`), demonstrating a clear and specific match.\n\n**Context:**\n* **My Resume Text:**\n    {{ $json.text }}\n* **Job Title:**\n    {{ $json.jobTitle }}\n* **Company Name:**\n    {{ $json.companyName }}\n* **Job Description:**\n    {{ $json.jobDescription }}\n\n**Instructions:**\n1.  **Be Professional and Specific:** Address the hiring team (e.g., \"Dear {{ $json.companyName }} Team,\" or \"Dear Hiring Manager,\"). Clearly state the `jobTitle` I am applying for.\n2.  **Focus on the Match (Most Important):** Do not just list my skills. Instead, pick 1-2 key requirements from the `Job Description` and show how my experience from `My Resume Text` directly fulfills those requirements.\n    * **Good Example:** \"I see you require 3+ years of automation testing. In my role at [My Past Company], I successfully designed and implemented an automation framework using [My Skill] that reduced testing time by 30%.\"\n    * **Bad Example:** \"My resume shows I have skills in Python, SQL, and automation.\"\n3.  **Keep it Concise:** 3-4 short paragraphs maximum.\n4.  **Conclude Professionally:** Conclude by stating that my resume is attached for their review and that I am eager to discuss how I can contribute to their team. Do **not** mention the resume's file name (e.g., \"Dat_Resume\").\n\n**Output Format:**\nRespond with ONLY a valid JSON object in this exact format:\n{\n  \"Subject\": \"Application for {{ $json.jobTitle }} - Yamin Hossain\",\n  \"emailBody\": \"...\"\n}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        752,
+        -48
+      ],
+      "id": "4775fc78-b1ce-47d5-ba38-21efb5cc3e92",
+      "name": "Message a model4",
+      "retryOnFail": true,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "E2M9PNgT9PMAmgHP",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the full JSON output from the previous node\nconst inputData = $input.first().json;\n\n// 1. Drill down to the text string (which has markdown)\nconst jsonString = inputData.content.parts[0].text;\n\n// 2. Find the start and end of the actual JSON\nconst startIndex = jsonString.indexOf('{');\nconst endIndex = jsonString.lastIndexOf('}') + 1;\n\n// 3. Slice out the clean JSON string\nconst cleanJsonString = jsonString.slice(startIndex, endIndex);\n\n// 4. Parse the clean, valid JSON object\nconst parsedData = JSON.parse(cleanJsonString);\n\n// 5. Return the clean, parsed data for the next nodes\nreturn parsedData;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        -48
+      ],
+      "id": "3da362af-af98-4580-aa5f-b47a32c36b40",
+      "name": "Code in JavaScript6"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f0ac26c0-bb0f-4172-8d5d-2ac8d409edd2",
+              "name": "Subject",
+              "value": "={{ $json.Subject }}",
+              "type": "string"
+            },
+            {
+              "id": "c80882ba-03d6-458d-bded-c55f7f8fbbca",
+              "name": "emailBody",
+              "value": "={{ $json.emailBody }}",
+              "type": "string"
+            },
+            {
+              "id": "3fc296d8-4ec7-426f-bdef-2bc2bb046a5b",
+              "name": "CompanyEmail",
+              "value": "={{ $('Code in JavaScript').item.json.CompanyEmail }}",
+              "type": "string"
+            },
+            {
+              "id": "c5a5017a-4690-464b-927c-122d0f7ae60f",
+              "name": "jobDescription",
+              "value": "={{ $('Code in JavaScript').item.json.jobDescription }}",
+              "type": "string"
+            },
+            {
+              "id": "9f1bff2c-4cec-46f8-b9b3-63ac54736903",
+              "name": "Resume",
+              "value": "={{ $('On form submission').item.json.Resume }}",
+              "type": "string"
+            },
+            {
+              "id": "35a91ca2-6b3d-4e2d-af88-b0599b55e39e",
+              "name": "submittedAt",
+              "value": "={{ $('On form submission').item.json.submittedAt }}",
+              "type": "string"
+            },
+            {
+              "id": "d7b6eb2d-3529-4d1d-9f3a-ef1dc87cd0a6",
+              "name": "jobTitle",
+              "value": "={{ $('Edit Fields').item.json.jobTitle }}",
+              "type": "string"
+            },
+            {
+              "id": "242d1e38-9e12-4664-8576-993c089d447c",
+              "name": "companyName",
+              "value": "={{ $('Edit Fields').item.json.companyName }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1312,
+        -64
+      ],
+      "id": "7ae16e86-5171-4612-a6cd-3e6c072f93e4",
+      "name": "Edit Fields8"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "https://drive.google.com/file/d/1-8dtnLOxFS7DU6hxJfUk0tMtqp_oH0ql/view?usp=sharing",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1504,
+        -64
+      ],
+      "id": "0be3b0dd-2f6b-4303-8a87-c1affe0099b6",
+      "name": "Data Analytics1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "0jNwrbXnRopBBBAC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        336,
+        176
+      ],
+      "id": "289e2169-22ce-4d37-8a7a-f97a778ba3a1",
+      "name": "Extract from File3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bfe1d0fe-f733-42da-8a94-234cc0f40a12",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "50c84769-7973-4f64-b6d5-5a40d53009d4",
+              "name": "jobTitle",
+              "value": "={{ $('Code in JavaScript').item.json.jobTitle }}",
+              "type": "string"
+            },
+            {
+              "id": "c3a6f1c3-4894-40ad-993c-b06fcfa6a71d",
+              "name": "companyName",
+              "value": "={{ $('Code in JavaScript').item.json.companyName }}",
+              "type": "string"
+            },
+            {
+              "id": "c22f4e4e-55f1-4e1d-a351-7a1e2f29c89c",
+              "name": "CompanyEmail",
+              "value": "={{ $('Code in JavaScript').item.json.CompanyEmail }}",
+              "type": "string"
+            },
+            {
+              "id": "28599ee6-6292-4ba5-94de-ecc89333be1a",
+              "name": "jobDescription",
+              "value": "={{ $('Code in JavaScript').item.json.jobDescription }}",
+              "type": "string"
+            },
+            {
+              "id": "5d5439fa-b1d7-4a8f-89d3-2ba6535ffb07",
+              "name": "submittedAt",
+              "value": "={{ $('Edit Fields').item.json.submittedAt }}",
+              "type": "string"
+            },
+            {
+              "id": "9c5cf899-fc29-47c1-8592-05fcc0061d40",
+              "name": "Resume",
+              "value": "={{ $('Edit Fields').item.json.Resume }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        544,
+        176
+      ],
+      "id": "0e2d6d38-e579-474d-be53-f4e02ca38d5b",
+      "name": "Edit Fields9"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an expert career assistant. Your task is to write a highly professional, concise, and personalized email for a job application.\n\nYour primary goal is to *synthesize* the company's needs (from the `Job Description`) with my qualifications (from `My Resume Text`), demonstrating a clear and specific match.\n\n**Context:**\n* **My Resume Text:**\n    {{ $json.text }}\n* **Job Title:**\n    {{ $json.jobTitle }}\n* **Company Name:**\n    {{ $json.companyName }}\n* **Job Description:**\n    {{ $json.jobDescription }}\n\n**Instructions:**\n1.  **Be Professional and Specific:** Address the hiring team (e.g., \"Dear {{ $json.companyName }} Team,\" or \"Dear Hiring Manager,\"). Clearly state the `jobTitle` I am applying for.\n2.  **Focus on the Match (Most Important):** Do not just list my skills. Instead, pick 1-2 key requirements from the `Job Description` and show how my experience from `My Resume Text` directly fulfills those requirements.\n    * **Good Example:** \"I see you require 3+ years of automation testing. In my role at [My Past Company], I successfully designed and implemented an automation framework using [My Skill] that reduced testing time by 30%.\"\n    * **Bad Example:** \"My resume shows I have skills in Python, SQL, and automation.\"\n3.  **Keep it Concise:** 3-4 short paragraphs maximum.\n4.  **Conclude Professionally:** Conclude by stating that my resume is attached for their review and that I am eager to discuss how I can contribute to their team. Do **not** mention the resume's file name (e.g., \"Dat_Resume\").\n\n**Output Format:**\nRespond with ONLY a valid JSON object in this exact format:\n{\n  \"Subject\": \"Application for {{ $json.jobTitle }} - Yamin Hossain\",\n  \"emailBody\": \"...\"\n}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        736,
+        192
+      ],
+      "id": "ed2faeba-eed2-40b3-8b04-4ad58361a070",
+      "name": "Message a model5",
+      "retryOnFail": true,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "E2M9PNgT9PMAmgHP",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the full JSON output from the previous node\nconst inputData = $input.first().json;\n\n// 1. Drill down to the text string (which has markdown)\nconst jsonString = inputData.content.parts[0].text;\n\n// 2. Find the start and end of the actual JSON\nconst startIndex = jsonString.indexOf('{');\nconst endIndex = jsonString.lastIndexOf('}') + 1;\n\n// 3. Slice out the clean JSON string\nconst cleanJsonString = jsonString.slice(startIndex, endIndex);\n\n// 4. Parse the clean, valid JSON object\nconst parsedData = JSON.parse(cleanJsonString);\n\n// 5. Return the clean, parsed data for the next nodes\nreturn parsedData;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        192
+      ],
+      "id": "ac28caf3-fe4e-4244-8859-597b6d905421",
+      "name": "Code in JavaScript7"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f0ac26c0-bb0f-4172-8d5d-2ac8d409edd2",
+              "name": "Subject",
+              "value": "={{ $json.Subject }}",
+              "type": "string"
+            },
+            {
+              "id": "c80882ba-03d6-458d-bded-c55f7f8fbbca",
+              "name": "emailBody",
+              "value": "={{ $json.emailBody }}",
+              "type": "string"
+            },
+            {
+              "id": "3fc296d8-4ec7-426f-bdef-2bc2bb046a5b",
+              "name": "CompanyEmail",
+              "value": "={{ $('Code in JavaScript').item.json.CompanyEmail }}",
+              "type": "string"
+            },
+            {
+              "id": "c5a5017a-4690-464b-927c-122d0f7ae60f",
+              "name": "jobDescription",
+              "value": "={{ $('Code in JavaScript').item.json.jobDescription }}",
+              "type": "string"
+            },
+            {
+              "id": "9f1bff2c-4cec-46f8-b9b3-63ac54736903",
+              "name": "Resume",
+              "value": "={{ $('On form submission').item.json.Resume }}",
+              "type": "string"
+            },
+            {
+              "id": "35a91ca2-6b3d-4e2d-af88-b0599b55e39e",
+              "name": "submittedAt",
+              "value": "={{ $('On form submission').item.json.submittedAt }}",
+              "type": "string"
+            },
+            {
+              "id": "34fc61cd-6a41-4127-a6c6-077106fb1c7f",
+              "name": "jobTitle",
+              "value": "={{ $('Edit Fields').item.json.jobTitle }}",
+              "type": "string"
+            },
+            {
+              "id": "d770c3af-a933-4b4c-b6d6-eb4369903b0a",
+              "name": "companyName",
+              "value": "={{ $('Edit Fields').item.json.companyName }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1328,
+        192
+      ],
+      "id": "148998e8-826c-43af-b00c-874424b180ff",
+      "name": "Edit Fields10"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "https://drive.google.com/file/d/1PLSPd0FWI8OuHPHg_kofLXV-C4qItgWY/view?usp=sharing",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1504,
+        176
+      ],
+      "id": "c15122fb-eff2-49f4-8cb8-03a754f8e303",
+      "name": "Full CV1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "0jNwrbXnRopBBBAC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "block",
+        "blockId": {
+          "__rl": true,
+          "value": "https://www.notion.so/Private-jobs-293b79b9a0ac80dd9273c60555a34981?source=copy_link",
+          "mode": "url"
+        },
+        "blockUi": {
+          "blockValues": [
+            {
+              "type": "numbered_list_item",
+              "richText": true,
+              "text": {
+                "text": [
+                  {
+                    "text": "=Applying for {{ $json.jobTitle }} \nCompany Name - {{ $json.companyName }} - \nJob Description - {{ $json.jobDescription }} \nDate Applied - {{ new Date().toLocaleDateString('en-GB') }} \nResume — {{ $json.Resume }}\nCompany Email - {{ $json.CompanyEmail }}",
+                    "annotationUi": {}
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        1936,
+        80
+      ],
+      "id": "e7809e7d-f685-481b-a907-db345b5a9476",
+      "name": "Append a block",
+      "credentials": {
+        "notionApi": {
+          "id": "wc0r92ucnGSPRrcb",
+          "name": "Notion account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Al Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ML / Data Science",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Data Analytics",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Full CV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Analyze an image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Analyze document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze an image": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze document": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Al Jobs": {
+      "main": [
+        [
+          {
+            "node": "Extract from File2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ML / Data Science": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Analytics": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Full CV": {
+      "main": [
+        [
+          {
+            "node": "Extract from File3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Al Jobs1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Message a model2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript4": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Al Jobs1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Append a block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Message a model3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model3": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript5": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields6": {
+      "main": [
+        [
+          {
+            "node": "ML / Data Science1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ML / Data Science1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Append a block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields7": {
+      "main": [
+        [
+          {
+            "node": "Message a model4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model4": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript6": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields8": {
+      "main": [
+        [
+          {
+            "node": "Data Analytics1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Analytics1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Append a block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields9": {
+      "main": [
+        [
+          {
+            "node": "Message a model5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model5": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript7": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields10": {
+      "main": [
+        [
+          {
+            "node": "Full CV1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Full CV1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Append a block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "01f71a6e-1a5e-48d9-9241-bdb763747434",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "04411eb26930464323e8bb251dd1bb00547c7d1338f64896678ec46ead56da85"
+  },
+  "id": "gZ1C3YRTDxqCKsPt",
+  "tags": []
+}
