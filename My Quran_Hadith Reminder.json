@@ -160,6 +160,8 @@
       ],
       "id": "c23519f9-9b14-417c-9b71-e7b32797b874",
       "name": "Message a model",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
       "credentials": {
         "googlePalmApi": {
           "id": "E2M9PNgT9PMAmgHP",
@@ -219,7 +221,8 @@
         "chatId": "1425297808",
         "text": "={{ $json.final_message }}",
         "additionalFields": {
-          "appendAttribution": false
+          "appendAttribution": false,
+          "parse_mode": "HTML"
         }
       },
       "type": "n8n-nodes-base.telegram",
@@ -240,7 +243,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// 1. Get all items coming from the Merge node\nconst allItems = $input.all();\n\n// 2. Get the AI reflection\nconst aiItem = allItems[0].json;\nconst reflection = aiItem.content.parts[0].text;\n\n// 3. Get the original item\nconst dataItem = allItems[1].json;\nconst originalItem = dataItem.original_item;\n\n// 4. Build the final message (PLAIN TEXT, no HTML)\nconst final_message = `📜 Daily Reminder\n\n\"${originalItem.text}\"\n— ${originalItem.reference}\n\n💡 Reflection:\n${reflection}`;\n\n// 5. Return the message AND the original item\nreturn {\n  final_message: final_message,\n  original_item: originalItem\n};"
+        "jsCode": "// --- Helper Function to Clean Text for HTML ---\nfunction sanitize(str) {\n  if (!str) return '';\n  return str.toString()\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;');\n}\n\n// 1. Get all items\nconst allItems = $input.all();\n\n// 2. Get and sanitize the AI reflection\nconst aiItem = allItems[0].json;\nconst reflection = sanitize(aiItem.content.parts[0].text);\n\n// 3. Get and sanitize the original item\nconst dataItem = allItems[1].json;\nconst originalItem = dataItem.original_item;\nconst originalText = sanitize(originalItem.text);\nconst originalReference = sanitize(originalItem.reference);\n\n// 4. Build the message using HTML tags (<b> for bold)\nconst final_message = `<b>📜 Daily Reminder</b>\n\n\"${originalText}\"\n— ${originalReference}\n\n<b>💡 Reflection:</b>\n${reflection}`;\n\n// 5. Return the message\nreturn {\n  final_message: final_message,\n  original_item: originalItem\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -711,7 +714,7 @@
     "availableInMCP": false,
     "errorWorkflow": "kXEIVv6ZuOZvu6nv"
   },
-  "versionId": "365cdf97-017a-4457-bb00-c2ad83657c56",
+  "versionId": "18463eb2-fe96-4e19-9415-8be4149e98a2",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "04411eb26930464323e8bb251dd1bb00547c7d1338f64896678ec46ead56da85"

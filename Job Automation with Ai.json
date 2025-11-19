@@ -167,7 +167,7 @@
         "messages": {
           "values": [
             {
-              "content": "=You are an expert data extractor. Analyze the following job post text and extract the job title, company name, company email, jobUrl (if any)  and the full job description (cleaned of any extra text like 'About Us' if it's not relevant but try to return the main points from job description if job description is big or longer).\n\nJob Post Text:\n{{ $json['Job Description'] }}\n\nRespond in this exact JSON format:\n{\n  \"jobTitle\": \"...\",\n  \"companyName\": \"...\",\n  \"CompanyEmail\": \"...\",\n  \"jobDescription\": \"...\"\n}"
+              "content": "=You are an expert data extractor. Analyze the following job post text and extract the job title, company name, company email, jobUrl (if any)  and the full job description (cleaned of any extra text like 'About Us' if it's not relevant but try to return the main points from job description only ).\nif salary is not mention write it down.\n\nJob Post Text:\n{{ $json['Job Description'] }}\n\nRespond in this exact JSON format:\n{\n  \"jobTitle\": \"...\",\n  \"companyName\": \"...\",\n  \"CompanyEmail\": \"...\",\n  \"jobDescription\": \"...\"\n  \"Salary\":\"...\"\n}"
             }
           ]
         },
@@ -183,6 +183,8 @@
       "id": "8f8c6403-059e-46f0-9c19-ee9c5013915c",
       "name": "Message a model",
       "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "maxTries": 5,
       "credentials": {
         "googlePalmApi": {
           "id": "E2M9PNgT9PMAmgHP",
@@ -241,6 +243,12 @@
               "id": "5a37c4b4-b4ee-4459-be58-148de1c48306",
               "name": "submittedAt",
               "value": "={{ $('On form submission').item.json.submittedAt }}",
+              "type": "string"
+            },
+            {
+              "id": "76c582b8-f5be-4800-a9d7-ef21155ab0d4",
+              "name": "Salary",
+              "value": "={{ $json.Salary }}",
               "type": "string"
             }
           ]
@@ -400,7 +408,7 @@
           "mode": "list",
           "cachedResultName": "models/gemini-2.5-flash"
         },
-        "text": "=You are an expert data extractor. Analyze the following job post Image and extract the job title, company name, company email, jobUrl (if any)  and the full job description (cleaned of any extra text like 'About Us' if it's not relevant but try to return the main points from job description if job description is big or longer).\n\nJob Post Text:\n{{ $json['Job Description'] }}\n\nRespond in this exact JSON format:\n{\n  \"jobTitle\": \"...\",\n  \"companyName\": \"...\",\n  \"CompanyEmail\": \"...\",\n  \"jobDescription\": \"...\"\n}",
+        "text": "=You are an expert data extractor. Analyze the following job post Image and extract the job title, company name, company email, jobUrl (if any)  and the full job description (cleaned of any extra text like 'About Us' if it's not relevant but try to return the main points only from job description).\n\nJob Post Text:\n{{ $json['Job Description'] }}\n\nRespond in this exact JSON format:\n{\n  \"jobTitle\": \"...\",\n  \"companyName\": \"...\",\n  \"CompanyEmail\": \"...\",\n  \"jobDescription\": \"...\",\n  \"Salary\": \"...\"\n}",
         "inputType": "binary",
         "binaryPropertyName": "Image_or_pdf_of_job_description",
         "options": {}
@@ -414,6 +422,8 @@
       "id": "f7db21f1-3905-4973-b8f9-0708ded6b6d3",
       "name": "Analyze an image",
       "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "maxTries": 5,
       "credentials": {
         "googlePalmApi": {
           "id": "E2M9PNgT9PMAmgHP",
@@ -492,7 +502,7 @@
           "mode": "list",
           "cachedResultName": "models/gemini-2.5-flash"
         },
-        "text": "=You are an expert data extractor. Analyze the following job post document and extract the job title, company name, company email, jobUrl (if any)  and the full job description (cleaned of any extra text like 'About Us' if it's not relevant but try to return the main points from job description if job description is big or longer).\n\nJob Post Text:\n{{ $json['Job Description'] }}\n\nRespond in this exact JSON format:\n{\n  \"jobTitle\": \"...\",\n  \"companyName\": \"...\",\n  \"CompanyEmail\": \"...\",\n  \"jobDescription\": \"...\"\n}",
+        "text": "=You are an expert data extractor. Analyze the following job post document and extract the job title, company name, company email, jobUrl (if any)  and the full job description (cleaned of any extra text like 'About Us' if it's not relevant but try to return the main points only from job description).\n\nJob Post Text:\n{{ $json['Job Description'] }}\n\nRespond in this exact JSON format:\n{\n  \"jobTitle\": \"...\",\n  \"companyName\": \"...\",\n  \"CompanyEmail\": \"...\",\n  \"jobDescription\": \"...\",\n  \"Salary\": \"...\"\n}",
         "inputType": "binary",
         "binaryPropertyName": "Image_or_pdf_of_job_description",
         "options": {}
@@ -506,6 +516,8 @@
       "id": "6d043036-82c8-44dd-a8ad-edc01a72b61b",
       "name": "Analyze document",
       "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "maxTries": 5,
       "credentials": {
         "googlePalmApi": {
           "id": "E2M9PNgT9PMAmgHP",
@@ -637,6 +649,12 @@
               "name": "companyName",
               "value": "={{ $('Edit Fields').item.json.companyName }}",
               "type": "string"
+            },
+            {
+              "id": "5f9c1d5c-4bfa-4ba0-8a0f-611b38e33cce",
+              "name": "Salary",
+              "value": "={{ $('Edit Fields').item.json.Salary }}",
+              "type": "string"
             }
           ]
         },
@@ -696,6 +714,12 @@
               "id": "9c5cf899-fc29-47c1-8592-05fcc0061d40",
               "name": "Resume",
               "value": "={{ $('Edit Fields').item.json.Resume }}",
+              "type": "string"
+            },
+            {
+              "id": "a69e2657-00de-4ee4-a253-571bff75e6d8",
+              "name": "Salary",
+              "value": "={{ $('Edit Fields').item.json.Salary }}",
               "type": "string"
             }
           ]
@@ -760,7 +784,7 @@
         "messages": {
           "values": [
             {
-              "content": "=You are an expert career assistant. Your task is to write a highly professional, concise, and personalized email for a job application.\n\nYour primary goal is to *synthesize* the company's needs (from the `Job Description`) with my qualifications (from `My Resume Text`), demonstrating a clear and specific match.\n\n**Context:**\n* **My Resume Text:**\n    {{ $json.text }}\n* **Job Title:**\n    {{ $json.jobTitle }}\n* **Company Name:**\n    {{ $json.companyName }}\n* **Job Description:**\n    {{ $json.jobDescription }}\n\n**Instructions:**\n1.  **Be Professional and Specific:** Address the hiring team (e.g., \"Dear {{ $json.companyName }} Team,\" or \"Dear Hiring Manager,\"). Clearly state the `jobTitle` I am applying for.\n2.  **Focus on the Match (Most Important):** Do not just list my skills. Instead, pick 1-2 key requirements from the `Job Description` and show how my experience from `My Resume Text` directly fulfills those requirements.\n    * **Good Example:** \"I see you require 3+ years of automation testing. In my role at [My Past Company], I successfully designed and implemented an automation framework using [My Skill] that reduced testing time by 30%.\"\n    * **Bad Example:** \"My resume shows I have skills in Python, SQL, and automation.\"\n3.  **Keep it Concise:** 3-4 short paragraphs maximum.\n4.  **Conclude Professionally:** Conclude by stating that my resume is attached for their review and that I am eager to discuss how I can contribute to their team. Do **not** mention the resume's file name (e.g., \"AI_Resume\").\n\n**Output Format:**\nRespond with ONLY a valid JSON object in this exact format:\n{\n  \"Subject\": \"Application for {{ $json.jobTitle }} - Yamin Hossain\",\n  \"emailBody\": \"...\"\n}"
+              "content": "=You are an expert career assistant. Your task is to write a highly professional, concise, and personalized email for a job application.\n\nYour primary goal is to *synthesize* the company's needs (from the `Job Description`) with my qualifications (from `My Resume Text`), demonstrating a clear and specific match.\n\n**Context:**\n* **My Resume Text:**\n    {{ $json.text }}\n* **Job Title:**\n    {{ $json.jobTitle }}\n* **Company Name:**\n    {{ $json.companyName }}\n* **Job Description:**\n    {{ $json.jobDescription }}\n\n**Instructions:**\n1.  **Be Professional and Specific:** Address the hiring team (e.g., \"Dear {{ $json.companyName }} Team,\" or \"Dear Hiring Manager,\"). Clearly state the `jobTitle` I am applying for.\n2.  **Focus on the Match (Most Important):** Do not just list my skills. Instead, pick 1-2 key requirements from the `Job Description` and show how my experience from `My Resume Text` directly fulfills those requirements.\n    * **Good Example:** \"I see you require 3+ years of automation testing. In my role at [My Past Company], I successfully designed and implemented an automation framework using [My Skill] that reduced testing time by 30%.\"\n    * **Bad Example:** \"My resume shows I have skills in Python, SQL, and automation.\"\n3.  **Keep it Concise:** 3-4 short paragraphs maximum.\n4.  **Conclude Professionally:** Conclude by stating that my resume is attached for their review and that I am eager to discuss how I can contribute to their team. Do **not** mention the resume's file name (e.g., \"AI_Resume\").\n5. also in signature or in the in end of email add my portfolio link - https://yamins-portfolio.vercel.app/\nand whatsapp and phone - +8801977940357\nLinkedIn - www.linkedin.com/in/yamin-hossain-38a3b3263\nFacebook - https://www.facebook.com/share/1Bidi7iNfK/\nfacebook and Linkedln add when needed\n\n\n**Output Format:**\nRespond with ONLY a valid JSON object in this exact format:\n{\n  \"Subject\": \"Application for {{ $json.jobTitle }} - Yamin Hossain\",\n  \"emailBody\": \"...\"\n}"
             }
           ]
         },
@@ -775,6 +799,8 @@
       "id": "5e40f47a-3945-4d61-ab96-47980c2ad3a3",
       "name": "Message a model2",
       "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "maxTries": 5,
       "credentials": {
         "googlePalmApi": {
           "id": "E2M9PNgT9PMAmgHP",
@@ -827,6 +853,12 @@
               "name": "Resume",
               "value": "={{ $('Edit Fields').item.json.Resume }}",
               "type": "string"
+            },
+            {
+              "id": "f5cf9c3a-3f63-4c57-8383-f65de1161ba0",
+              "name": "Salary",
+              "value": "={{ $('Edit Fields').item.json.Salary }}",
+              "type": "string"
             }
           ]
         },
@@ -852,7 +884,7 @@
         "messages": {
           "values": [
             {
-              "content": "=You are an expert career assistant. Your task is to write a highly professional, concise, and personalized email for a job application.\n\nYour primary goal is to *synthesize* the company's needs (from the `Job Description`) with my qualifications (from `My Resume Text`), demonstrating a clear and specific match.\n\n**Context:**\n* **My Resume Text:**\n    {{ $json.text }}\n* **Job Title:**\n    {{ $json.jobTitle }}\n* **Company Name:**\n    {{ $json.companyName }}\n* **Job Description:**\n    {{ $json.jobDescription }}\n\n**Instructions:**\n1.  **Be Professional and Specific:** Address the hiring team (e.g., \"Dear {{ $json.companyName }} Team,\" or \"Dear Hiring Manager,\"). Clearly state the `jobTitle` I am applying for.\n2.  **Focus on the Match (Most Important):** Do not just list my skills. Instead, pick 1-2 key requirements from the `Job Description` and show how my experience from `My Resume Text` directly fulfills those requirements.\n    * **Good Example:** \"I see you require 3+ years of automation testing. In my role at [My Past Company], I successfully designed and implemented an automation framework using [My Skill] that reduced testing time by 30%.\"\n    * **Bad Example:** \"My resume shows I have skills in Python, SQL, and automation.\"\n3.  **Keep it Concise:** 3-4 short paragraphs maximum.\n4.  **Conclude Professionally:** Conclude by stating that my resume is attached for their review and that I am eager to discuss how I can contribute to their team. Do **not** mention the resume's file name (e.g., \"Ml_resume\").\n\n**Output Format:**\nRespond with ONLY a valid JSON object in this exact format:\n{\n  \"Subject\": \"Application for {{ $json.jobTitle }} - Yamin Hossain\",\n  \"emailBody\": \"...\"\n}"
+              "content": "=You are an expert career assistant. Your task is to write a highly professional, concise, and personalized email for a job application.\n\nYour primary goal is to *synthesize* the company's needs (from the `Job Description`) with my qualifications (from `My Resume Text`), demonstrating a clear and specific match.\n\n**Context:**\n* **My Resume Text:**\n    {{ $json.text }}\n* **Job Title:**\n    {{ $json.jobTitle }}\n* **Company Name:**\n    {{ $json.companyName }}\n* **Job Description:**\n    {{ $json.jobDescription }}\n\n**Instructions:**\n1.  **Be Professional and Specific:** Address the hiring team (e.g., \"Dear {{ $json.companyName }} Team,\" or \"Dear Hiring Manager,\"). Clearly state the `jobTitle` I am applying for.\n2.  **Focus on the Match (Most Important):** Do not just list my skills. Instead, pick 1-2 key requirements from the `Job Description` and show how my experience from `My Resume Text` directly fulfills those requirements.\n    * **Good Example:** \"I see you require 3+ years of automation testing. In my role at [My Past Company], I successfully designed and implemented an automation framework using [My Skill] that reduced testing time by 30%.\"\n    * **Bad Example:** \"My resume shows I have skills in Python, SQL, and automation.\"\n3.  **Keep it Concise:** 3-4 short paragraphs maximum.\n4.  **Conclude Professionally:** Conclude by stating that my resume is attached for their review and that I am eager to discuss how I can contribute to their team. Do **not** mention the resume's file name (e.g., \"Ml_resume\").\n5. also in signature or in the in end of email add my portfolio link - https://yamins-portfolio.vercel.app/\nand whatsapp and phone - +8801977940357\nLinkedIn - www.linkedin.com/in/yamin-hossain-38a3b3263\nFacebook - https://www.facebook.com/share/1Bidi7iNfK/\nfacebook and Linkedln add when needed\n\n**Output Format:**\nRespond with ONLY a valid JSON object in this exact format:\n{\n  \"Subject\": \"Application for {{ $json.jobTitle }} - Yamin Hossain\",\n  \"emailBody\": \"...\"\n}"
             }
           ]
         },
@@ -867,6 +899,8 @@
       "id": "6753c695-a884-40d4-8298-f357eb3884fc",
       "name": "Message a model3",
       "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "maxTries": 5,
       "credentials": {
         "googlePalmApi": {
           "id": "E2M9PNgT9PMAmgHP",
@@ -937,6 +971,12 @@
               "id": "396ee33b-4a7d-4f58-93c4-619e4484568c",
               "name": "companyName",
               "value": "={{ $('Edit Fields').item.json.companyName }}",
+              "type": "string"
+            },
+            {
+              "id": "960ac569-11eb-40d0-8a35-1b71de7938ce",
+              "name": "Salary",
+              "value": "={{ $('Edit Fields').item.json.Salary }}",
               "type": "string"
             }
           ]
@@ -1023,6 +1063,12 @@
               "name": "Resume",
               "value": "={{ $('Edit Fields').item.json.Resume }}",
               "type": "string"
+            },
+            {
+              "id": "b579fb4a-004d-47d7-a604-5e330edd3e19",
+              "name": "Salary",
+              "value": "={{ $('Edit Fields').item.json.Salary }}",
+              "type": "string"
             }
           ]
         },
@@ -1048,7 +1094,7 @@
         "messages": {
           "values": [
             {
-              "content": "=You are an expert career assistant. Your task is to write a highly professional, concise, and personalized email for a job application.\n\nYour primary goal is to *synthesize* the company's needs (from the `Job Description`) with my qualifications (from `My Resume Text`), demonstrating a clear and specific match.\n\n**Context:**\n* **My Resume Text:**\n    {{ $json.text }}\n* **Job Title:**\n    {{ $json.jobTitle }}\n* **Company Name:**\n    {{ $json.companyName }}\n* **Job Description:**\n    {{ $json.jobDescription }}\n\n**Instructions:**\n1.  **Be Professional and Specific:** Address the hiring team (e.g., \"Dear {{ $json.companyName }} Team,\" or \"Dear Hiring Manager,\"). Clearly state the `jobTitle` I am applying for.\n2.  **Focus on the Match (Most Important):** Do not just list my skills. Instead, pick 1-2 key requirements from the `Job Description` and show how my experience from `My Resume Text` directly fulfills those requirements.\n    * **Good Example:** \"I see you require 3+ years of automation testing. In my role at [My Past Company], I successfully designed and implemented an automation framework using [My Skill] that reduced testing time by 30%.\"\n    * **Bad Example:** \"My resume shows I have skills in Python, SQL, and automation.\"\n3.  **Keep it Concise:** 3-4 short paragraphs maximum.\n4.  **Conclude Professionally:** Conclude by stating that my resume is attached for their review and that I am eager to discuss how I can contribute to their team. Do **not** mention the resume's file name (e.g., \"Dat_Resume\").\n\n**Output Format:**\nRespond with ONLY a valid JSON object in this exact format:\n{\n  \"Subject\": \"Application for {{ $json.jobTitle }} - Yamin Hossain\",\n  \"emailBody\": \"...\"\n}"
+              "content": "=You are an expert career assistant. Your task is to write a highly professional, concise, and personalized email for a job application.\n\nYour primary goal is to *synthesize* the company's needs (from the `Job Description`) with my qualifications (from `My Resume Text`), demonstrating a clear and specific match.\n\n**Context:**\n* **My Resume Text:**\n    {{ $json.text }}\n* **Job Title:**\n    {{ $json.jobTitle }}\n* **Company Name:**\n    {{ $json.companyName }}\n* **Job Description:**\n    {{ $json.jobDescription }}\n\n**Instructions:**\n1.  **Be Professional and Specific:** Address the hiring team (e.g., \"Dear {{ $json.companyName }} Team,\" or \"Dear Hiring Manager,\"). Clearly state the `jobTitle` I am applying for.\n2.  **Focus on the Match (Most Important):** Do not just list my skills. Instead, pick 1-2 key requirements from the `Job Description` and show how my experience from `My Resume Text` directly fulfills those requirements.\n    * **Good Example:** \"I see you require 3+ years of automation testing. In my role at [My Past Company], I successfully designed and implemented an automation framework using [My Skill] that reduced testing time by 30%.\"\n    * **Bad Example:** \"My resume shows I have skills in Python, SQL, and automation.\"\n3.  **Keep it Concise:** 3-4 short paragraphs maximum.\n4.  **Conclude Professionally:** Conclude by stating that my resume is attached for their review and that I am eager to discuss how I can contribute to their team. Do **not** mention the resume's file name (e.g., \"Dat_Resume\").\n5. also in signature or in the in end of email add my portfolio link - https://yamins-portfolio.vercel.app/\nand whatsapp and phone - +8801977940357\nLinkedIn - www.linkedin.com/in/yamin-hossain-38a3b3263\nFacebook - https://www.facebook.com/share/1Bidi7iNfK/\nfacebook and Linkedln add when needed\n\n**Output Format:**\nRespond with ONLY a valid JSON object in this exact format:\n{\n  \"Subject\": \"Application for {{ $json.jobTitle }} - Yamin Hossain\",\n  \"emailBody\": \"...\"\n}"
             }
           ]
         },
@@ -1063,6 +1109,8 @@
       "id": "4775fc78-b1ce-47d5-ba38-21efb5cc3e92",
       "name": "Message a model4",
       "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "maxTries": 5,
       "credentials": {
         "googlePalmApi": {
           "id": "E2M9PNgT9PMAmgHP",
@@ -1133,6 +1181,12 @@
               "id": "242d1e38-9e12-4664-8576-993c089d447c",
               "name": "companyName",
               "value": "={{ $('Edit Fields').item.json.companyName }}",
+              "type": "string"
+            },
+            {
+              "id": "5b7450ac-5c43-4f49-a2f1-07e957637129",
+              "name": "Salary",
+              "value": "={{ $('Edit Fields').item.json.Salary }}",
               "type": "string"
             }
           ]
@@ -1233,6 +1287,12 @@
               "name": "Resume",
               "value": "={{ $('Edit Fields').item.json.Resume }}",
               "type": "string"
+            },
+            {
+              "id": "8831a859-1c8a-4e7a-82cd-2657078b1eb7",
+              "name": "Salary",
+              "value": "={{ $('Edit Fields').item.json.Salary }}",
+              "type": "string"
             }
           ]
         },
@@ -1258,7 +1318,7 @@
         "messages": {
           "values": [
             {
-              "content": "=You are an expert career assistant. Your task is to write a highly professional, concise, and personalized email for a job application.\n\nYour primary goal is to *synthesize* the company's needs (from the `Job Description`) with my qualifications (from `My Resume Text`), demonstrating a clear and specific match.\n\n**Context:**\n* **My Resume Text:**\n    {{ $json.text }}\n* **Job Title:**\n    {{ $json.jobTitle }}\n* **Company Name:**\n    {{ $json.companyName }}\n* **Job Description:**\n    {{ $json.jobDescription }}\n\n**Instructions:**\n1.  **Be Professional and Specific:** Address the hiring team (e.g., \"Dear {{ $json.companyName }} Team,\" or \"Dear Hiring Manager,\"). Clearly state the `jobTitle` I am applying for.\n2.  **Focus on the Match (Most Important):** Do not just list my skills. Instead, pick 1-2 key requirements from the `Job Description` and show how my experience from `My Resume Text` directly fulfills those requirements.\n    * **Good Example:** \"I see you require 3+ years of automation testing. In my role at [My Past Company], I successfully designed and implemented an automation framework using [My Skill] that reduced testing time by 30%.\"\n    * **Bad Example:** \"My resume shows I have skills in Python, SQL, and automation.\"\n3.  **Keep it Concise:** 3-4 short paragraphs maximum.\n4.  **Conclude Professionally:** Conclude by stating that my resume is attached for their review and that I am eager to discuss how I can contribute to their team. Do **not** mention the resume's file name (e.g., \"Dat_Resume\").\n\n**Output Format:**\nRespond with ONLY a valid JSON object in this exact format:\n{\n  \"Subject\": \"Application for {{ $json.jobTitle }} - Yamin Hossain\",\n  \"emailBody\": \"...\"\n}"
+              "content": "=You are an expert career assistant. Your task is to write a highly professional, concise, and personalized email for a job application.\n\nYour primary goal is to *synthesize* the company's needs (from the `Job Description`) with my qualifications (from `My Resume Text`), demonstrating a clear and specific match.\n\n**Context:**\n* **My Resume Text:**\n    {{ $json.text }}\n* **Job Title:**\n    {{ $json.jobTitle }}\n* **Company Name:**\n    {{ $json.companyName }}\n* **Job Description:**\n    {{ $json.jobDescription }}\n\n**Instructions:**\n1.  **Be Professional and Specific:** Address the hiring team (e.g., \"Dear {{ $json.companyName }} Team,\" or \"Dear Hiring Manager,\"). Clearly state the `jobTitle` I am applying for.\n2.  **Focus on the Match (Most Important):** Do not just list my skills. Instead, pick 1-2 key requirements from the `Job Description` and show how my experience from `My Resume Text` directly fulfills those requirements.\n    * **Good Example:** \"I see you require 3+ years of automation testing. In my role at [My Past Company], I successfully designed and implemented an automation framework using [My Skill] that reduced testing time by 30%.\"\n    * **Bad Example:** \"My resume shows I have skills in Python, SQL, and automation.\"\n3.  **Keep it Concise:** 3-4 short paragraphs maximum.\n4.  **Conclude Professionally:** Conclude by stating that my resume is attached for their review and that I am eager to discuss how I can contribute to their team. Do **not** mention the resume's file name (e.g., \"Dat_Resume\").\n5. also in signature or in the in end of email add my portfolio link - https://yamins-portfolio.vercel.app/\nand whatsapp and phone - +8801977940357\nLinkedIn - www.linkedin.com/in/yamin-hossain-38a3b3263\nFacebook - https://www.facebook.com/share/1Bidi7iNfK/\nfacebook and Linkedln add when needed\n\n**Output Format:**\nRespond with ONLY a valid JSON object in this exact format:\n{\n  \"Subject\": \"Application for {{ $json.jobTitle }} - Yamin Hossain\",\n  \"emailBody\": \"...\"\n}"
             }
           ]
         },
@@ -1273,6 +1333,8 @@
       "id": "ed2faeba-eed2-40b3-8b04-4ad58361a070",
       "name": "Message a model5",
       "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "maxTries": 5,
       "credentials": {
         "googlePalmApi": {
           "id": "E2M9PNgT9PMAmgHP",
@@ -1344,6 +1406,12 @@
               "name": "companyName",
               "value": "={{ $('Edit Fields').item.json.companyName }}",
               "type": "string"
+            },
+            {
+              "id": "801d9839-4e42-4418-bc95-c7707645ae97",
+              "name": "Salary",
+              "value": "={{ $('Edit Fields').item.json.Salary }}",
+              "type": "string"
             }
           ]
         },
@@ -1400,7 +1468,7 @@
               "text": {
                 "text": [
                   {
-                    "text": "=Applying for {{ $json.jobTitle }} \nCompany Name - {{ $json.companyName }} - \nJob Description - {{ $json.jobDescription }} \nDate Applied - {{ new Date().toLocaleDateString('en-GB') }} \nResume — {{ $json.Resume }}\nCompany Email - {{ $json.CompanyEmail }}",
+                    "text": "=Applying for {{ $json.jobTitle }} \nCompany Name - {{ $json.companyName }} - \n**Job Description:** {{ $json.jobDescription.length > 1800 ? $json.jobDescription.slice(0, 1800) + \"...\" : $json.jobDescription }}\nDate Applied - {{ new Date().toLocaleDateString('en-GB') }} \nResume — {{ $json.Resume }}\nCompany Email - {{ $json.CompanyEmail }}\nSalary - {{ $json.Salary }}",
                     "annotationUi": {}
                   }
                 ]
@@ -1899,9 +1967,10 @@
   "settings": {
     "executionOrder": "v1",
     "callerPolicy": "workflowsFromSameOwner",
-    "availableInMCP": false
+    "availableInMCP": false,
+    "errorWorkflow": "gZ1C3YRTDxqCKsPt"
   },
-  "versionId": "01f71a6e-1a5e-48d9-9241-bdb763747434",
+  "versionId": "bddf3699-daa6-44ce-8b4b-861faef32d71",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "04411eb26930464323e8bb251dd1bb00547c7d1338f64896678ec46ead56da85"
