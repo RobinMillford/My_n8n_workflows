@@ -467,6 +467,29 @@
                 },
                 "conditions": [
                   {
+                    "id": "b061df33-cb7c-4978-80d3-19f55636bbd0",
+                    "leftValue": "={{ $json[\"Image or pdf of job description\"][0].mimetype }}",
+                    "rightValue": "image/jpeg",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
                     "id": "8384b7a5-6e69-4783-9822-7abc2df4fe16",
                     "leftValue": "={{ $json[\"Image or pdf of job description\"][0].mimetype }}",
                     "rightValue": "application/pdf",
@@ -510,7 +533,7 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        -1104,
+        -1120,
         256
       ],
       "id": "6d043036-82c8-44dd-a8ad-edc01a72b61b",
@@ -1468,7 +1491,7 @@
               "text": {
                 "text": [
                   {
-                    "text": "=Applying for {{ $json.jobTitle }} \nCompany Name - {{ $json.companyName }} - \n**Job Description:** {{ $json.jobDescription.length > 1800 ? $json.jobDescription.slice(0, 1800) + \"...\" : $json.jobDescription }}\nDate Applied - {{ new Date().toLocaleDateString('en-GB') }} \nResume — {{ $json.Resume }}\nCompany Email - {{ $json.CompanyEmail }}\nSalary - {{ $json.Salary }}",
+                    "text": "=Applying for {{ $json.jobTitle }} \nCompany Name - {{ $json.companyName }} - \n**Job Description:** {{ $json.jobDescription.length > 1700 ? $json.jobDescription.slice(0, 1700) + \"...\" : $json.jobDescription }}\nDate Applied - {{ new Date().toLocaleDateString('en-GB') }} \nResume — {{ $json.Resume }}\nCompany Email - {{ $json.CompanyEmail }}\nSalary - {{ $json.Salary }}",
                     "annotationUi": {}
                   }
                 ]
@@ -1591,6 +1614,13 @@
     },
     "Switch1": {
       "main": [
+        [
+          {
+            "node": "Analyze an image",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "Analyze an image",
@@ -1970,7 +2000,7 @@
     "availableInMCP": false,
     "errorWorkflow": "gZ1C3YRTDxqCKsPt"
   },
-  "versionId": "bddf3699-daa6-44ce-8b4b-861faef32d71",
+  "versionId": "d1ab5add-7e94-4043-864b-00d521f8f047",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "04411eb26930464323e8bb251dd1bb00547c7d1338f64896678ec46ead56da85"
