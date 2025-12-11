@@ -1,0 +1,157 @@
+{
+  "name": "Tool: Travily API",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "response_val",
+              "name": "result",
+              "value": "={{ JSON.stringify($json) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        576,
+        -384
+      ],
+      "id": "f7aec7e8-8196-4192-8ad8-5d6c366175ad",
+      "name": "Format Response"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{ $json.query }}\",\n  \"search_depth\": \"advanced\",\n  \"include_answer\": true,\n  \"max_results\": 5\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        352,
+        -384
+      ],
+      "id": "454d8eb3-bc5a-4a9e-8755-631a8841148f",
+      "name": "Web_Search_Travily1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{ $fromAI('query') }}\",\n  \"search_depth\": \"advanced\",\n  \"include_answer\": true,\n  \"max_results\": 5\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        544,
+        -176
+      ],
+      "id": "8723c351-c689-431e-b634-eb5269c7486f",
+      "name": "Web_Search_Travily"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ffaf39c0-81ed-456d-9f7f-61089a5df3af",
+              "name": "response",
+              "value": "={{ $json.choices[0].message.content }}",
+              "type": "string"
+            },
+            {
+              "id": "635fcb25-de54-4c28-8f5a-dc7ecf70378e",
+              "name": "citations",
+              "value": "={{ $json.citations }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        -192
+      ],
+      "id": "592612db-80e4-4dbc-b0ce-3d03071cfcd6",
+      "name": "Search Response"
+    },
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n\"query\": \"Aapple stocks\"\n}"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        144,
+        -384
+      ],
+      "id": "3ca6fca9-96b4-42b0-afbf-be43f20fff42",
+      "name": "Web Search"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Web_Search_Travily1": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Web_Search_Travily": {
+      "main": [
+        [
+          {
+            "node": "Search Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Web Search": {
+      "main": [
+        [
+          {
+            "node": "Web_Search_Travily1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8667b33e-0b3c-4182-8253-c048e260ff6b",
+  "meta": {
+    "instanceId": "04411eb26930464323e8bb251dd1bb00547c7d1338f64896678ec46ead56da85"
+  },
+  "id": "uOicX3RXru2j9JQq",
+  "tags": []
+}

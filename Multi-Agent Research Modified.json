@@ -1,0 +1,1398 @@
+{
+  "name": "Multi-Agent Research Modified",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Topic of Research:\n{{ $json.output.research }}\n{{ $json.output.both }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Agent Role: Query Refiner for Business Understanding\n\nInstructions:\nYou are tasked with creating new queries related to the user provided input to enhance business understanding. Analyze the provided query, infer its context and generate 5 new search queries related to the topic. Your responses should be concise, actionable, and structured for research purposes. The agent must respect the user's desired research scope and avoid adding context or terms that deviate from the orginial question or topic.\n\n- Ultimately, you will be using the user provided \"Topic of Research\" input and generateexactly five unique search queries.\n- Do NOT provide or look for additional raw datasets, only research insights.\n\nOutput the final result as JSON only, containing:\n{\n  \"topic\": \"USER_TOPIC\",\n  \"searchQueries\": [\n    \"Query_1\",\n    \"Query_2\",\n    \"Query_3\",\n    \"Query_4\",\n    \"Query_5\"\n  ]\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        928,
+        208
+      ],
+      "id": "b1c0f391-56c4-4d3e-b97c-7e0fdf93b702",
+      "name": "Query Refiner"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Topic of Research: \n{{ $json.output.topic }}\nSearch Query: \n{{ $json.output.searchQueries[0] }}, {{ $json.output.searchQueries[1] }}, {{ $json.output.searchQueries[2] }}, {{ $json.output.searchQueries[3] }}, {{ $json.output.searchQueries[4] }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a Research Assistant specialising in combining web searches to gather in-depth information from 5 unique queries provided by the user. Your research must be thorough, well-structured, and properly cited with URLs for every source.\n\n**Guidelines for Conducting Research:**\n\n1. **Topic Depth and Coverage:**  \n   - Each of the 5 queries should return detailed findings with multiple supporting points.  \n   - Combine insights from different sources to provide a comprehensive perspective in the summary.\n\n2. **Sources:**  \n   - Include titles for *every source* cited.\n   - Include URLs for *every piece of information* cited.\n   - Include author and year from every source if applicable\n   - If multiple sources support the same fact, list all URLs.\n\n3. **Verification:**  \n   - Prioritize reputable and credible sources.  \n\n4. **JSON Output Format:**  \n   Return the final research in the following JSON structure, IMPORTANT: Return the output as raw JSON, not a stringified JSON. Do not wrap the JSON in quotes or escape characters:\n\n{\n  \"topic\": \"USER_TOPIC\",\n  \"results\": [\n    {\n      \"query\": \"QUERY_1\",\n      \"summary\": \"Detailed findings from the first query\",\n      \"sources\": [\n        {\n          \"title\": \"Title of Source 1\",\n          \"url\": \"URL_1\",\n          \"author\": \"Author Name 1\",\n          \"year\": \"2023\"\n        },\n        {\n          \"title\": \"Title of Source 2\",\n          \"url\": \"URL_2\",\n          \"author\": \"Author Name 2\",\n          \"year\": \"2022\"\n        }\n      ]\n    },\n    {\n      \"query\": \"QUERY_2\",\n      \"summary\": \"Detailed findings from the second query\",\n      \"sources\": [\n        {\n          \"title\": \"Title of Source 3\",\n          \"url\": \"URL_3\",\n          \"author\": \"Author Name 3\",\n          \"year\": \"2021\"\n        },\n        {\n          \"title\": \"Title of Source 4\",\n          \"url\": \"URL_4\",\n          \"author\": \"Author Name 4\",\n          \"year\": \"2020\"\n        }\n      ]\n    },\n    {\n      \"query\": \"QUERY_3\",\n      \"summary\": \"Detailed findings from the third query\",\n      \"sources\": [\n        {\n          \"title\": \"Title of Source 5\",\n          \"url\": \"URL_5\",\n          \"author\": \"Author Name 5\",\n          \"year\": \"2019\"\n        }\n      ]\n    },\n    {\n      \"query\": \"QUERY_4\",\n      \"summary\": \"Detailed findings from the fourth query\",\n      \"sources\": [\n        {\n          \"title\": \"Title of Source 6\",\n          \"url\": \"URL_6\",\n          \"author\": \"Author Name 6\",\n          \"year\": \"2023\"\n        },\n        {\n          \"title\": \"Title of Source 7\",\n          \"url\": \"URL_7\",\n          \"author\": \"Author Name 7\",\n          \"year\": \"2022\"\n        }\n      ]\n    },\n    {\n      \"query\": \"QUERY_5\",\n      \"summary\": \"Detailed findings from the fifth query\",\n      \"sources\": [\n        {\n          \"title\": \"Title of Source 8\",\n          \"url\": \"URL_8\",\n          \"author\": \"Author Name 8\",\n          \"year\": \"2021\"\n        }\n      ]\n    }\n  ]\n}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1664,
+        96
+      ],
+      "id": "381b6046-10fe-4e7c-b925-b62898ae9a5d",
+      "name": "Research Manager"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"topic\": \"USER_TOPIC\",\n  \"searchQueries\": [\n    \"Query_1\",\n    \"Query_2\",\n    \"Query_3\",\n    \"Query_4\",\n    \"Query_5\"\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1088,
+        384
+      ],
+      "id": "2d87fa83-6822-419e-ad8e-c5f086b85253",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "content": "## Research Query Refiner\n- Redefines research or question\n- Generates unique search queries\n",
+        "height": 536,
+        "width": 1420,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        -16
+      ],
+      "id": "ea5e43e1-6cd5-4c63-b557-37dfa887d05e",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Research Manager\n- Conducts research via Web Search\n- Utilizes 5 unique search queries\n- Retrieves tile, author, URL, date and key insights",
+        "height": 536,
+        "width": 904,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1344,
+        -16
+      ],
+      "id": "0a6ecd03-297f-45f0-87f7-283d65445892",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Style Guide & Research Compiler\n- Quality control\n- Markdown formatting\n- APA referencing",
+        "height": 500,
+        "width": 1092,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        544
+      ],
+      "id": "4e2a5196-9ea8-47a6-8822-ce0c010dd466",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={\n  \"topic\": \"{{ $json.output.topic }}\",\n  \"results\": [\n    {\n      \"query\": \"{{ $json.output.results[0].query }}\",\n      \"summary\": \"{{ $json.output.results[0].summary }}\",\n      \"sources\": [\n        {\n          \"title\": \"{{ $json.output.results[0].sources[0].title }}\",\n          \"url\": \"{{ $json.output.results[0].sources[0].url }}\",\n          \"author\": \"{{ $json.output.results[0].sources[0].author }}\",\n          \"year\": \"{{ $json.output.results[0].sources[0].year }}\"\n        },\n        {\n          \"title\": \"{{ $json.output.results[0].sources[1].title }}\",\n          \"url\": \"{{ $json.output.results[0].sources[1].url }}\",\n          \"author\": \"{{ $json.output.results[0].sources[1].author }}\",\n          \"year\": \"{{ $json.output.results[0].sources[1].year }}\"\n        }\n      ]\n    },\n    {\n      \"query\": \"{{ $json.output.results[1].query }}\",\n      \"summary\": \"{{ $json.output.results[1].summary }}\",\n      \"sources\": [\n        {\n          \"title\": \"{{ $json.output.results[1].sources[0].title }}\",\n          \"url\": \"{{ $json.output.results[1].sources[0].url }}\",\n          \"author\": \"{{ $json.output.results[1].sources[0].author }}\",\n          \"year\": \"{{ $json.output.results[1].sources[0].year }}\"\n        }\n      ]\n    },\n    {\n      \"query\": \"{{ $json.output.results[2].query }}\",\n      \"summary\": \"{{ $json.output.results[2].summary }}\",\n      \"sources\": [\n        {\n          \"title\": \"{{ $json.output.results[2].sources[0].title }}\",\n          \"url\": \"{{ $json.output.results[2].sources[0].url }}\",\n          \"author\": \"{{ $json.output.results[2].sources[0].author }}\",\n          \"year\": \"{{ $json.output.results[2].sources[0].year }}\"\n        }\n      ]\n    },\n    {\n      \"query\": \"{{ $json.output.results[3].query }}\",\n      \"summary\": \"{{ $json.output.results[3].summary }}\",\n      \"sources\": [\n        {\n          \"title\": \"{{ $json.output.results[3].sources[0].title }}\",\n          \"url\": \"{{ $json.output.results[3].sources[0].url }}\",\n          \"author\": \"{{ $json.output.results[3].sources[0].author }}\",\n          \"year\": \"{{ $json.output.results[3].sources[0].year }}\"\n        }\n      ]\n    },\n    {\n      \"query\": \"{{ $json.output.results[4].query }}\",\n      \"summary\": \"{{ $json.output.results[4].summary }}\",\n      \"sources\": [\n        {\n          \"title\": \"{{ $json.output.results[4].sources[0].title }}\",\n          \"url\": \"{{ $json.output.results[4].sources[0].url }}\",\n          \"author\": \"{{ $json.output.results[4].sources[0].author }}\",\n          \"year\": \"{{ $json.output.results[4].sources[0].year }}\"\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {
+          "systemMessage": "You are a Research Paper Generator AI specializing in Markdown formatting. Your task is to compile research findings into a comprehensive structured academic research paper with proper citations.\n\n### **Writing Instructions:**\n1. Use a **formal and structured writing style**.\n2. Ensure each section has a **clear transition from the previous section**.\n3. Use **inline citations in the format**: `[Author, Year]`.\n4. Format the **References section using APA style**.\n5. Expand on **economic, ethical, and technical implications**.\n6. Include **real-world case studies where applicable**.\n7. Provide **bullet points for key takeaways in each section**.\n\n### **Styling Instructions:**\n1. Format the research paper using the following structure:\n   - Title (`#`)\n   - Abstract (`##`)\n   - Introduction (`##`)\n   - Main Sections (from research queries) (`##`)\n   - Conclusion (`##`)\n   - References (`##`)\n\n2. Each query must be:\n   - A section title (`## Query Name`)\n   - A summary paragraph\n   - Inline citations formatted as `[Author, Year]`.\n\n3. At the end, include a **References** section formatted as:\nAuthor, Year. Title of the Paper. Available at: [URL]\n\n4. Ensure all citations match the sources provided.\n\n### **Input Format (JSON):**\n{\n\"topic\": \"Machine Learning in Healthcare\",\n\"results\": [\n {\n   \"query\": \"AI applications in diagnosis\",\n   \"summary\": \"AI models have shown promise in diagnosing diseases with higher accuracy than traditional methods.\",\n   \"sources\": [\n     {\"title\": \"Deep Learning in Radiology\", \"url\": \"https://example.com\", \"author\": \"Smith et al.\", \"year\": \"2022\"}\n   ]\n }\n]\n}\n\n### **Expected Markdown Output:**\n# Machine Learning in Healthcare\n\n## Abstract\nThis paper explores AI applications in diagnosis...\n\n## AI Applications in Diagnosis\nAI models have shown promise in diagnosing diseases with higher accuracy [Smith et al., 2022].\n\n### Sources\n- Smith et al., 2022. *Deep Learning in Radiology*. Available at: [https://example.com](https://example.com).\n\n## References\n1. Smith et al., 2022. *Deep Learning in Radiology*. Available at: [https://example.com](https://example.com)."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1472,
+        672
+      ],
+      "id": "8d26fe2e-49e3-4747-8669-ccad818c4ae4",
+      "name": "Research Compiler"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Topic of Research: \n{{ $json.output.dataset }}\n{{ $json.output.both }}",
+        "options": {
+          "systemMessage": "Role: You are a Research Assistant specialising in using the web_search tool for gathering additional datasets related to the topic of research provided by the user. \n\nUltimately, your research must be thorough, well-structured with URLs for every additional dataset.\n- Do NOT include research summaries or explanations, only dataset sources.\n- Provide links to the dataset from reputable sources\n- Output in Markdown\n- Include title and concise description why the dataset is relevant to the research topic\n- If you can't find any additional dataset, output: N/A"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        320,
+        608
+      ],
+      "id": "aaed937e-020b-41c9-943c-cb3e4c329510",
+      "name": "Dataset Agent"
+    },
+    {
+      "parameters": {
+        "content": "## Dataset Agent\n- Provides additional datasets\n- Appends existing row if applicable",
+        "height": 516,
+        "width": 1560,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        544
+      ],
+      "id": "53b40f1c-8071-4227-975d-7ffcdbce63fb",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "82bc3d8b-5f1b-4293-b8f6-4443fb14daac",
+              "name": "response",
+              "value": "done",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2240,
+        624
+      ],
+      "id": "ff59a4eb-ef1b-43ac-b40f-8f4e695d5a3c",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"topic\": \"USER_TOPIC\",\n  \"results\": [\n    {\n      \"query\": \"QUERY_1\",\n      \"summary\": \"Detailed findings from the first query\",\n      \"sources\": [\n        {\n          \"title\": \"Title of Source 1\",\n          \"url\": \"URL_1\",\n          \"author\": \"Author Name 1\",\n          \"year\": \"2023\"\n        },\n        {\n          \"title\": \"Title of Source 2\",\n          \"url\": \"URL_2\",\n          \"author\": \"Author Name 2\",\n          \"year\": \"2022\"\n        }\n      ]\n    },\n    {\n      \"query\": \"QUERY_2\",\n      \"summary\": \"Detailed findings from the second query\",\n      \"sources\": [\n        {\n          \"title\": \"Title of Source 3\",\n          \"url\": \"URL_3\",\n          \"author\": \"Author Name 3\",\n          \"year\": \"2021\"\n        },\n        {\n          \"title\": \"Title of Source 4\",\n          \"url\": \"URL_4\",\n          \"author\": \"Author Name 4\",\n          \"year\": \"2020\"\n        }\n      ]\n    },\n    {\n      \"query\": \"QUERY_3\",\n      \"summary\": \"Detailed findings from the third query\",\n      \"sources\": [\n        {\n          \"title\": \"Title of Source 5\",\n          \"url\": \"URL_5\",\n          \"author\": \"Author Name 5\",\n          \"year\": \"2019\"\n        }\n      ]\n    },\n    {\n      \"query\": \"QUERY_4\",\n      \"summary\": \"Detailed findings from the fourth query\",\n      \"sources\": [\n        {\n          \"title\": \"Title of Source 6\",\n          \"url\": \"URL_6\",\n          \"author\": \"Author Name 6\",\n          \"year\": \"2023\"\n        },\n        {\n          \"title\": \"Title of Source 7\",\n          \"url\": \"URL_7\",\n          \"author\": \"Author Name 7\",\n          \"year\": \"2022\"\n        }\n      ]\n    },\n    {\n      \"query\": \"QUERY_5\",\n      \"summary\": \"Detailed findings from the fifth query\",\n      \"sources\": [\n        {\n          \"title\": \"Title of Source 8\",\n          \"url\": \"URL_8\",\n          \"author\": \"Author Name 8\",\n          \"year\": \"2021\"\n        }\n      ]\n    }\n  ]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1984,
+        368
+      ],
+      "id": "f0a31b5f-df6f-4a3a-83a4-4eddac73a9af",
+      "name": "Structured Output Parser2"
+    },
+    {
+      "parameters": {
+        "text": "=User input:\n{{ $json.message.text }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "research",
+              "description": "Performs research on any topic, writes research papers, is able to access web searches."
+            },
+            {
+              "name": "dataset",
+              "description": "Finds additional data or datasets to support the research topic."
+            },
+            {
+              "name": "both",
+              "description": "Finds additional data or datasets to support the research topic and performs research on any topic, writes research papers, is able to access web searches."
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "Classify the user input into one of three categories: \n1) \"research\" if the user asks for research findings.\n2) \"dataset\" if the user asks for datasets.\n3) \"both\" if the user requests both research and datasets."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1,
+      "position": [
+        144,
+        192
+      ],
+      "id": "630aa73b-eb41-41d8-a952-b8c344d15974",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "tableId": "research",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "research_content",
+              "fieldValue": "={{ $('Research Compiler').item.json['output'] }}"
+            },
+            {
+              "fieldId": "research_topic",
+              "fieldValue": "={{ $('Research Manager').item.json.output.topic }}"
+            },
+            {
+              "fieldId": "additional_datasets",
+              "fieldValue": "N/A"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        640
+      ],
+      "id": "dd9a35a4-4567-4d7b-adca-1e68d4bf5668",
+      "name": "Create Row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "zBxvOwSryi7JF3oo",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "research",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "additional_datasets",
+              "condition": "eq",
+              "keyValue": "=N/A"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "additional_datasets",
+              "fieldValue": "={{ $json.output }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1024,
+        560
+      ],
+      "id": "f0c2a353-de36-4e45-aa9a-9fdd4a8db745",
+      "name": "Update Row Datasets",
+      "credentials": {
+        "supabaseApi": {
+          "id": "zBxvOwSryi7JF3oo",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a0ea1371-b18f-4b4f-bd84-9f5732bf832d",
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "d05c1829-d054-4b85-9410-c7bdcb83edaa",
+              "leftValue": "={{ $('If2').item.json.output.both }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        640,
+        624
+      ],
+      "id": "67f147aa-c94f-4410-87f1-09ecedf92ccd",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "model": "grok-4-1-fast-reasoning",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatXAiGrok",
+      "typeVersion": 1,
+      "position": [
+        80,
+        880
+      ],
+      "id": "86a602cf-d579-411e-ac23-8235f2d7df79",
+      "name": "xAI Grok Chat Model",
+      "credentials": {
+        "xAiApi": {
+          "id": "yYmiy65ih2az6S4P",
+          "name": "xAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "grok-4-1-fast-non-reasoning",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatXAiGrok",
+      "typeVersion": 1,
+      "position": [
+        1584,
+        352
+      ],
+      "id": "efaded63-c774-4968-8700-6d91eb8ba7eb",
+      "name": "xAI Grok Chat Model1",
+      "credentials": {
+        "xAiApi": {
+          "id": "yYmiy65ih2az6S4P",
+          "name": "xAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-pro",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        144,
+        368
+      ],
+      "id": "0f3b6f40-5ddd-4366-8a75-ef22b78df54d",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "nUl9Feh6KWkLJ8N1",
+          "name": "Google Gemini API Clinet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1504,
+        864
+      ],
+      "id": "6f21f78d-2e08-471e-a208-4b5505f8acdc",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "C3eg9yufgOqBQusm",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "web_search",
+        "description": "Call this tool to perform web searches",
+        "workflowId": {
+          "__rl": true,
+          "value": "uOicX3RXru2j9JQq",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/uOicX3RXru2j9JQq",
+          "cachedResultName": "Tool: Travily API"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ $json.output.searchQueries }}"
+          },
+          "matchingColumns": [
+            "query"
+          ],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        1792,
+        368
+      ],
+      "id": "e0bfdda6-62c5-463b-a0e9-885799f2d563",
+      "name": "Travily API"
+    },
+    {
+      "parameters": {
+        "name": "web_search",
+        "description": "=Call this tool to perform web searches.\nResearch Topic:\n{{ $json.output }}",
+        "workflowId": {
+          "__rl": true,
+          "value": "uOicX3RXru2j9JQq",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/uOicX3RXru2j9JQq",
+          "cachedResultName": "Tool: Travily API"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        304,
+        896
+      ],
+      "id": "f8dd8bca-f469-4f84-ade2-c85fa2ab90de",
+      "name": "Travily API2"
+    },
+    {
+      "parameters": {
+        "model": "grok-4-1-fast-reasoning",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatXAiGrok",
+      "typeVersion": 1,
+      "position": [
+        800,
+        384
+      ],
+      "id": "1a90a2fe-06cd-4eb6-b55c-99e6c79d0377",
+      "name": "xAI Grok Chat Model2",
+      "credentials": {
+        "xAiApi": {
+          "id": "yYmiy65ih2az6S4P",
+          "name": "xAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the output from the previous node\nconst output = items[0].json.output;\n\n// Check which keys exist\nconst isResearch = output.hasOwnProperty('research');\nconst isDataset = output.hasOwnProperty('dataset');\nconst isBoth = output.hasOwnProperty('both');\n\n// Set flags for which branches to run\nreturn {\n  json: {\n    ...items[0].json,\n    run_research: isResearch || isBoth,\n    run_dataset: isDataset || isBoth\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        176
+      ],
+      "id": "7e93df4b-cd48-4357-857d-ba8fa6e4668a",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e9f79f99-1110-411b-a723-a70e991df33e",
+              "leftValue": "={{ $json.run_research }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        640,
+        96
+      ],
+      "id": "ca7256d6-ec01-4739-840a-009ff743108c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f709869c-edea-4e17-8488-257ace2fc754",
+              "leftValue": "={{ $json.run_dataset }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        640,
+        240
+      ],
+      "id": "e80c8ba5-85c4-4229-8237-88bdbc01ca4b",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "tableId": "research",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "research_topic",
+              "fieldValue": "={{ $('Telegram Trigger').item.json.message.text }}"
+            },
+            {
+              "fieldId": "research_content",
+              "fieldValue": "N/A"
+            },
+            {
+              "fieldId": "additional_datasets",
+              "fieldValue": "={{ $('Dataset Agent').item.json.output }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        768,
+        848
+      ],
+      "id": "48cfe80e-8cd8-4589-be2c-f29a87a8612e",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "zBxvOwSryi7JF3oo",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -112,
+        144
+      ],
+      "id": "01cd0316-4c5c-451e-9447-bd0195be3c9c",
+      "name": "Telegram Trigger",
+      "webhookId": "ade8b851-90d2-45ed-9d09-1e17f4749375",
+      "retryOnFail": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "TviMAxsMOdlHSFJc",
+          "name": "Telegram account (Research)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Get the data safely from the previous node (Create Row)\n// We use \"items[0].json\" to get the data fields\nconst topic = items[0].json.research_topic || \"Research_Report\";\nconst content = items[0].json.research_content || \"No content generated.\";\nconst datasets = items[0].json.additional_datasets || \"No datasets found.\";\n\n// 2. Combine them into one nice document\nconst fullReport = `\n# Research Report: ${topic}\n\n${content}\n\n---\n## Additional Datasets\n${datasets}\n`;\n\n// 3. Convert text to a binary file (Base64)\nconst binaryData = Buffer.from(fullReport).toString('base64');\n\n// 4. Return the binary file so Telegram can see it\nreturn {\n  json: items[0].json, // Pass through the original JSON data\n  binary: {\n    data: {\n      data: binaryData,\n      mimeType: 'text/markdown',\n      fileName: `${topic.replace(/[^a-z0-9]/gi, '_')}.md` // Clean filename\n    }\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1936,
+        768
+      ],
+      "id": "04ee3be5-c525-45c9-ad1d-226bacea3114",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "1425297808",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2112,
+        768
+      ],
+      "id": "412c24ab-6436-4ea6-8649-c2572e59624d",
+      "name": "Send a document",
+      "webhookId": "5b71a039-8f63-4d31-acf0-d37c32a8789e",
+      "credentials": {
+        "telegramApi": {
+          "id": "TviMAxsMOdlHSFJc",
+          "name": "Telegram account (Research)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Get the data safely from the previous node (Create Row)\n// We use \"items[0].json\" to get the data fields\nconst topic = items[0].json.research_topic || \"Research_Report\";\nconst content = items[0].json.research_content || \"No content generated.\";\nconst datasets = items[0].json.additional_datasets || \"No datasets found.\";\n\n// 2. Combine them into one nice document\nconst fullReport = `\n# Research Report: ${topic}\n\n${content}\n\n---\n## Additional Datasets\n${datasets}\n`;\n\n// 3. Convert text to a binary file (Base64)\nconst binaryData = Buffer.from(fullReport).toString('base64');\n\n// 4. Return the binary file so Telegram can see it\nreturn {\n  json: items[0].json, // Pass through the original JSON data\n  binary: {\n    data: {\n      data: binaryData,\n      mimeType: 'text/markdown',\n      fileName: `${topic.replace(/[^a-z0-9]/gi, '_')}.md` // Clean filename\n    }\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1024,
+        896
+      ],
+      "id": "9cd60c3c-0c09-4e00-9e0a-1ab2f459c4d1",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "1425297808",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1264,
+        800
+      ],
+      "id": "b75fa319-27b0-49c9-8553-62c001afaba4",
+      "name": "Send a document1",
+      "webhookId": "5b71a039-8f63-4d31-acf0-d37c32a8789e",
+      "credentials": {
+        "telegramApi": {
+          "id": "TviMAxsMOdlHSFJc",
+          "name": "Telegram account (Research)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Get the input item\nconst item = items[0].json;\n\n// 2. Extract Data (Smart Fallbacks)\n// Topic: Look in 'research_topic' (DB) or 'topic' (Agent)\nconst topic = item.research_topic || item.topic || \"Research_Topic\";\n\n// Research Paper: Look in 'research_content'\nconst researchContent = item.research_content || \"No research paper content found.\";\n\n// Datasets: LOOK HERE FIRST -> 'additional_datasets' (DB) OR 'output' (Your Agent)\n// This line fixes your issue by grabbing the \"output\" field you showed me\nconst additionalDatasets = item.additional_datasets || item.output || \"No datasets found.\";\n\n// 3. Combine them into one text document\nconst fullReport = `\n# Research Report: ${topic}\n\n${researchContent}\n\n---\n## Additional Datasets\n${additionalDatasets}\n`;\n\n// 4. Create a clean filename starting with \"dataset_\"\n// Remove special characters to prevent errors\nconst cleanTopic = topic.replace(/[^a-z0-9]/gi, '_').substring(0, 30);\nconst fileName = `dataset_${cleanTopic}.md`; \n\n// 5. Convert to binary file (Base64) for Telegram\nconst binaryData = Buffer.from(fullReport).toString('base64');\n\n// 6. Return result\nreturn {\n  json: item,\n  binary: {\n    data: {\n      data: binaryData,\n      mimeType: 'text/markdown',\n      fileName: fileName\n    }\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1024,
+        736
+      ],
+      "id": "2ae8f0e7-5592-49bf-b435-339126d2cbfa",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "formTitle": "Research Agent Form",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Query",
+              "placeholder": "Ask About the query"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        144,
+        -160
+      ],
+      "id": "088da560-390e-43e9-b993-8b72f4e27bb5",
+      "name": "On form submission",
+      "webhookId": "151cc842-5a5e-4779-8788-acd51caaab27"
+    },
+    {
+      "parameters": {
+        "tableId": "research",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "research_topic",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json['Research Topic'] }}"
+            },
+            {
+              "fieldId": "additional_datasets",
+              "fieldValue": "={{ $('Dataset Agent').item.json['output'] }}"
+            },
+            {
+              "fieldId": "research_content",
+              "fieldValue": "N/A"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        880,
+        -160
+      ],
+      "id": "82c8ccc2-a276-4936-b9b1-34e98ff9820c",
+      "name": "Create Row Datasets",
+      "credentials": {
+        "supabaseApi": {
+          "id": "zBxvOwSryi7JF3oo",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.research }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "07f98bf4-adb6-4ec5-9432-3f1d8003e2a5",
+                    "leftValue": "={{ $json.output.dataset }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d3f826a5-68b0-4e3a-b3bb-79d2ea8c06be",
+                    "leftValue": "={{ $json.output.both }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        608,
+        -176
+      ],
+      "id": "6d38c631-c756-44d6-8965-ed91954ac66d",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n\"Research Topic\": \"Data sector salaries\",\n\"submittedAt\": \"2025-02-19T13:37:24.463+01:00\",\n\"formMode\": \"test\"\n}"
+      },
+      "id": "e481dbac-0fa8-4caa-a9ac-e84ac8dfeac8",
+      "typeVersion": 1.1,
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        368,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "1425297808",
+        "text": "Message Recived",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        160,
+        32
+      ],
+      "id": "51410c19-95a3-41be-a65e-da3cc637f6a4",
+      "name": "Send a text message",
+      "webhookId": "5b71a039-8f63-4d31-acf0-d37c32a8789e",
+      "credentials": {
+        "telegramApi": {
+          "id": "TviMAxsMOdlHSFJc",
+          "name": "Telegram account (Research)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "1425297808",
+        "text": "Information Extraction Done",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        432,
+        32
+      ],
+      "id": "fa98020e-58a0-4a8a-8667-089206749173",
+      "name": "Send a text message1",
+      "webhookId": "5b71a039-8f63-4d31-acf0-d37c32a8789e",
+      "credentials": {
+        "telegramApi": {
+          "id": "TviMAxsMOdlHSFJc",
+          "name": "Telegram account (Research)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "1425297808",
+        "text": "Query Refine Done",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1072,
+        16
+      ],
+      "id": "fa99127e-35e5-41f0-b970-f42e22616ed2",
+      "name": "Send a text message2",
+      "webhookId": "5b71a039-8f63-4d31-acf0-d37c32a8789e",
+      "credentials": {
+        "telegramApi": {
+          "id": "TviMAxsMOdlHSFJc",
+          "name": "Telegram account (Research)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "1425297808",
+        "text": "Research Conduct Done",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2000,
+        64
+      ],
+      "id": "89b9fbd0-7660-4f0c-87a2-e4f7ca868650",
+      "name": "Send a text message3",
+      "webhookId": "5b71a039-8f63-4d31-acf0-d37c32a8789e",
+      "credentials": {
+        "telegramApi": {
+          "id": "TviMAxsMOdlHSFJc",
+          "name": "Telegram account (Research)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "1425297808",
+        "text": "Summarized All the Research",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1744,
+        864
+      ],
+      "id": "11dd8d38-8605-42c6-8bf1-6080e7f81ec6",
+      "name": "Send a text message4",
+      "webhookId": "5b71a039-8f63-4d31-acf0-d37c32a8789e",
+      "credentials": {
+        "telegramApi": {
+          "id": "TviMAxsMOdlHSFJc",
+          "name": "Telegram account (Research)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "1425297808",
+        "text": "Found All Datasets",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        576,
+        800
+      ],
+      "id": "ef4b3777-7558-43eb-aed4-90642ac23b2c",
+      "name": "Send a text message5",
+      "webhookId": "5b71a039-8f63-4d31-acf0-d37c32a8789e",
+      "credentials": {
+        "telegramApi": {
+          "id": "TviMAxsMOdlHSFJc",
+          "name": "Telegram account (Research)"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Query Refiner": {
+      "main": [
+        [
+          {
+            "node": "Research Manager",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Manager": {
+      "main": [
+        [
+          {
+            "node": "Research Compiler",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Query Refiner",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Compiler": {
+      "main": [
+        [
+          {
+            "node": "Create Row",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dataset Agent": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Research Manager",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Row": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Update Row Datasets",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "xAI Grok Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Dataset Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "xAI Grok Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Research Manager",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Research Compiler",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Travily API": {
+      "ai_tool": [
+        [
+          {
+            "node": "Research Manager",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Travily API2": {
+      "ai_tool": [
+        [
+          {
+            "node": "Dataset Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "xAI Grok Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Query Refiner",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Query Refiner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Dataset Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a document": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Send a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Row Datasets": {
+      "main": [
+        []
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Send a document1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "Send a document1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "errorWorkflow": "CMlsltCZNIGXJ0OG"
+  },
+  "versionId": "f3b9b145-c6bf-45d6-b539-703eb150b8cb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "04411eb26930464323e8bb251dd1bb00547c7d1338f64896678ec46ead56da85"
+  },
+  "id": "CMlsltCZNIGXJ0OG",
+  "tags": []
+}
