@@ -1,30 +1,98 @@
 # ⚙️ n8n Workflow Collection
 
-A curated collection of **n8n workflow templates** (`.json` files) for automating real-world tasks like AI-powered reminders, API integrations, and job notifications.
 
-Each workflow is designed to demonstrate **practical automation skills** — including data handling, LLM integration, and process orchestration.
 
----
+A curated collection of **n8n workflow templates** (`.json` files) for automating real-world tasks like AI research, job notifications, and daily reminders.
+
+
+
+Each workflow is designed to demonstrate **practical automation skills** — including advanced parallel processing, hybrid AI model integration, and database orchestration.
+
+
 
 ## 🧩 What is n8n?
 
+
+
 [n8n](https://n8n.io) is a **visual workflow automation platform** that lets you connect APIs, databases, and services with minimal code.  
+
 It’s open-source and extensible, making it perfect for both personal automation and production pipelines.
 
----
+
 
 ## 🧠 What’s Inside
 
+
+
 Each `.json` file in this repository represents a **complete, ready-to-import workflow**.
 
-```
+
+
+```text
 
 📦 n8n-workflows/
-┣ 📄 Job Automation with Ai.json
-┣ 📄 LinkedIn\_AI\_Job\_Notifier.json
-┣ 📄 Quran\_Hadith\_Reminder.json
 
-```
+┣ 📄 Multi-Agent Research Modified.json  <-- ✨ NEW!
+
+┣ 📄 Tool_ Travily API.json <-- ✨ NEW! (Dependency for Research Agent)
+
+┣ 📄 Job Automation with Ai.json
+
+┣ 📄 LinkedIn_AI_Job_Notifier.json
+
+┣ 📄 Quran_Hadith_Reminder.json
+
+````
+
+
+
+-----
+
+
+
+### 4️⃣ Multi-Model Research Agent (Hybrid Architecture)
+
+
+
+**An advanced, production-grade agentic workflow inspired by [Jack Van Der Vall](https://github.com/jackvandervall/agentic-archive).**
+
+
+
+This workflow acts as a comprehensive research assistant that lives in **Telegram**. It uses a **"Divide and Conquer"** strategy to split a user's request into parallel tasks, executing them simultaneously to save time.
+
+
+
+**Key Features:**
+
+
+
+  * **Parallel Processing:** Uses a Router -\> Merge architecture to run **Web Research** and **Dataset Hunting** branches at the same time.
+
+  * **Hybrid AI Intelligence:** Orchestrates multiple models to balance cost and performance:
+
+      * **Grok (xAI):** Used for high-speed reasoning and query refinement.
+
+      * **Gemini (Google):** Used for large-context information extraction.
+
+      * **GPT-4o (OpenAI):** Used for the final academic paper writing.
+
+  * **Tool Integration:**
+
+      * **Tavily API:** Optimized web search for agents (replaced expensive Perplexity calls).
+
+      * **Supabase:** Automatically logs every research topic, paper, and dataset link to a database.
+
+      * **Telegram Bot:** Full interaction via chat; generates and sends a `.md` file to bypass Telegram's 4,096 character limit.
+
+
+
+**Main Workflow:** `Multi-Agent Research Modified.json`  
+
+**Required Tool:** `Tool_ Travily API.json` (Import this separately as a Tool)  
+
+**Preview:**
+
+![Multi AGEN](https://github.com/RobinMillford/My_n8n_workflows/blob/main/Multi-Agent%20Research%20Modified.png?raw=true)
 
 ### 1️⃣ LinkedIn AI Job Notifier
 
