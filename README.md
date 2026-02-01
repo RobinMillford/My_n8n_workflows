@@ -1,6 +1,15 @@
 # ⚙️ n8n Workflow Collection
 
+> ## 🚨 CRITICAL SECURITY NOTICE
+> 
+> **This repository previously contained exposed API keys that are still visible in git commit history.**  
+> **Repository owners MUST take immediate action - see [SECURITY.md](SECURITY.md) for detailed remediation steps.**
+> 
+> - ⚠️ Exposed API keys must be **revoked immediately**
+> - 🔧 Git history must be **cleaned using git-filter-repo or BFG**
+> - 📖 See [SECURITY.md](SECURITY.md) for complete instructions
 
+---
 
 A curated collection of **n8n workflow templates** (`.json` files) for automating real-world tasks like AI research, job notifications, and daily reminders.
 
