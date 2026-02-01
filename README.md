@@ -90,6 +90,8 @@ This workflow acts as a comprehensive research assistant that lives in **Telegra
 
 **Required Tool:** `Tool_ Travily API.json` (Import this separately as a Tool)  
 
+> ⚠️ **IMPORTANT:** After importing `Tool_ Travily API.json`, you **must** replace `YOUR_TAVILY_API_KEY_HERE` with your actual [Tavily API key](https://tavily.com). Never commit real API keys to version control.
+
 **Preview:**
 
 ![Multi AGEN](https://github.com/RobinMillford/My_n8n_workflows/blob/main/Multi-Agent%20Research%20Modified.png?raw=true)

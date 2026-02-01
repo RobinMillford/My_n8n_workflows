@@ -30,7 +30,7 @@
         "url": "https://api.tavily.com/search",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{ $json.query }}\",\n  \"search_depth\": \"advanced\",\n  \"include_answer\": true,\n  \"max_results\": 5\n}",
+        "jsonBody": "={\n  \"api_key\": \"YOUR_TAVILY_API_KEY_HERE\",\n  \"query\": \"{{ $json.query }}\",\n  \"search_depth\": \"advanced\",\n  \"include_answer\": true,\n  \"max_results\": 5\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -48,7 +48,7 @@
         "url": "https://api.tavily.com/search",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{ $fromAI('query') }}\",\n  \"search_depth\": \"advanced\",\n  \"include_answer\": true,\n  \"max_results\": 5\n}",
+        "jsonBody": "={\n  \"api_key\": \"YOUR_TAVILY_API_KEY_HERE\",\n  \"query\": \"{{ $fromAI('query') }}\",\n  \"search_depth\": \"advanced\",\n  \"include_answer\": true,\n  \"max_results\": 5\n}",
         "options": {
           "redirect": {
             "redirect": {}
