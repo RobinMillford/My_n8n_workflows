@@ -137,6 +137,20 @@ This is a comprehensive workflow that automates the entire job application proce
 
 ![AI Job Application Workflow](https://github.com/RobinMillford/My_n8n_workflows/blob/main/Job%20automation_ai.png?raw=true)
 
+**Research Paper Summarizer** is an automated n8n workflow designed to streamline academic literature reviews by transforming raw PDFs into structured data. It follows a sophisticated pipeline:
+
+* **Automated Retrieval:** Triggers manually to scan a specific Google Drive folder for research papers (PDFs).
+* **Intelligent Processing:** Loops through each file, extracts the text content, and sends it to a **GPT-5-Mini** model.
+* **Deep Analysis:** The AI acts as an expert assistant in **Consumer Behavior and AI Marketing**, analyzing the shift from traditional to "intelligent" shopping journeys.
+* **Data Extraction:** It specifically identifies theoretical constructs like "Algorithmic Delegation," consumer autonomy, and empirical findings.
+* **Structured Storage:** A JavaScript node cleans and flattens the AI's JSON response to ensure data integrity.
+* **Final Output:** Automatically appends the structured summary—including metadata, key findings, and framework relevance—directly into a **Google Sheet** for easy reference and citation.
+
+**File:** `Research paper summarizer.json` 
+
+**Preview:**
+![Research_Paper_SUmmarizer](https://github.com/RobinMillford/My_n8n_workflows/blob/main/Screenshot%20from%202026-02-20%2014-42-05.png)
+
 ---
 
 ## 🚀 How to Use These Workflows
