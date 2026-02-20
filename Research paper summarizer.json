@@ -1,0 +1,147 @@
+{
+  "name": "Research paper summarizer - Template",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-896, 16],
+      "id": "manual-trigger",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "mimeType = 'application/pdf'",
+        "limit": 100,
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [-640, 0],
+      "id": "gd-search",
+      "name": "Search files and folders"
+    },
+    {
+      "parameters": {
+        "options": { "reset": false }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [-448, 0],
+      "id": "loop-node",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": "={{ $json.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [-176, 0],
+      "id": "gd-download",
+      "name": "Download file"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [64, 48],
+      "id": "pdf-extract",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are an expert academic research assistant specializing in Consumer Behavior and AI-Driven Marketing...",
+              "role": "system"
+            },
+            {
+              "content": "Analyze the provided paper and write a structured, JSON-formatted report...\nInput Text:\n{{ $json.text }}"
+            }
+          ]
+        },
+        "simplify": false,
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [224, -80],
+      "id": "ai-node",
+      "name": "Message a model"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Access the content object from the model's response\nconst content = $node[\"Message a model\"].json.choices[0].message.content;\n\n// Helper function to safely handle both arrays and strings\nconst safelyJoin = (data) => {\n  if (Array.isArray(data)) return data.join(\" | \");\n  return data || \"Not stated\";\n};\n\nreturn {\n  title: content.paper_metadata.title,\n  authors: content.paper_metadata.authors,\n  year: content.paper_metadata.year,\n  traditional_journey: content.journey_mapping.traditional_process_described,\n  intelligent_journey: content.journey_mapping.intelligent_shift_described,\n  autonomy_impact: content.theoretical_constructs.consumer_autonomy,\n  delegation_level: content.theoretical_constructs.delegation_level,\n  key_drivers: safelyJoin(content.theoretical_constructs.key_drivers),\n  study_type: content.empirical_evidence.study_type,\n  key_findings: safelyJoin(content.empirical_evidence.key_findings), \n  limitations: safelyJoin(content.empirical_evidence.limitations),\n  framework_relevance: content.framework_contribution.relevance_to_intelligent_journeys,\n  suggested_section: content.framework_contribution.suggested_section\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [544, -32],
+      "id": "js-code",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "title": "={{ $json.title }}",
+            "authors": "={{ $json.authors }}",
+            "year": "={{ $json.year }}",
+            "traditional_journey": "={{ $json.traditional_journey }}",
+            "intelligent_journey": "={{ $json.intelligent_journey }}",
+            "autonomy_impact": "={{ $json.autonomy_impact }}",
+            "delegation_level": "={{ $json.delegation_level }}",
+            "key_drivers": "={{ $json.key_drivers }}",
+            "study_type": "={{ $json.study_type }}",
+            "key_findings": "={{ $json.key_findings }}",
+            "limitations": "={{ $json.limitations }}",
+            "framework_relevance": "={{ $json.framework_relevance }}",
+            "suggested_section": "={{ $json.suggested_section }}"
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [784, 192],
+      "id": "gs-append",
+      "name": "Append row in sheet"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": { "main": [[{ "node": "Search files and folders", "type": "main", "index": 0 }]] },
+    "Search files and folders": { "main": [[{ "node": "Loop Over Items", "type": "main", "index": 0 }]] },
+    "Loop Over Items": { "main": [[], [{ "node": "Download file", "type": "main", "index": 0 }]] },
+    "Download file": { "main": [[{ "node": "Extract from File", "type": "main", "index": 0 }]] },
+    "Extract from File": { "main": [[{ "node": "Message a model", "type": "main", "index": 0 }]] },
+    "Message a model": { "main": [[{ "node": "Code in JavaScript", "type": "main", "index": 0 }]] },
+    "Code in JavaScript": { "main": [[{ "node": "Append row in sheet", "type": "main", "index": 0 }]] },
+    "Append row in sheet": { "main": [[{ "node": "Loop Over Items", "type": "main", "index": 0 }]] }
+  }
+}
