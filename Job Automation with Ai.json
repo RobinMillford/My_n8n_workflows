@@ -20,16 +20,16 @@
               "fieldOptions": {
                 "values": [
                   {
-                    "option": "Ai_Resume"
+                    "option": "AI_Resume"
                   },
                   {
-                    "option": "Ml_resume"
+                    "option": "AI_Resume_Jvai"
                   },
                   {
                     "option": "Data_Resume"
                   },
                   {
-                    "option": "Masters_resume"
+                    "option": "ATS_Resume"
                   }
                 ]
               }
@@ -41,12 +41,14 @@
       "type": "n8n-nodes-base.formTrigger",
       "typeVersion": 2.3,
       "position": [
-        -1856,
-        -48
+        -2640,
+        448
       ],
-      "id": "58c8a703-7d91-40f8-bc8b-b184c70012ab",
+      "id": "38c69623-f4e7-45f4-b1fc-71a29f6046d6",
       "name": "On form submission",
-      "webhookId": "68de12bb-9ba4-4329-b72b-7b26528e7e53"
+      "webhookId": "d52e7814-3b1e-4ef0-aef0-837c95d91139",
+      "retryOnFail": true,
+      "maxTries": 4
     },
     {
       "parameters": {
@@ -63,7 +65,7 @@
                 "conditions": [
                   {
                     "leftValue": "={{ $json.Resume }}",
-                    "rightValue": "Ai_Resume",
+                    "rightValue": "AI_Resume",
                     "operator": {
                       "type": "string",
                       "operation": "equals"
@@ -86,7 +88,7 @@
                   {
                     "id": "357d539d-1fe2-4c05-8f9f-2e17f8ddf3ce",
                     "leftValue": "={{ $json.Resume }}",
-                    "rightValue": "Ml_resume",
+                    "rightValue": "AI_Resume_Jvai",
                     "operator": {
                       "type": "string",
                       "operation": "equals",
@@ -132,7 +134,7 @@
                   {
                     "id": "16744b74-254f-4416-b1e8-538467649fc1",
                     "leftValue": "={{ $json.Resume }}",
-                    "rightValue": "Masters_resume",
+                    "rightValue": "ATS_Resume",
                     "operator": {
                       "type": "string",
                       "operation": "equals",
@@ -150,10 +152,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.3,
       "position": [
-        -48,
-        -80
+        -384,
+        432
       ],
-      "id": "9a89caa3-7f1c-4f56-9d46-3376cc0104e8",
+      "id": "1b34889e-2e89-4aba-bbb7-a59555f72d05",
       "name": "Switch"
     },
     {
@@ -177,17 +179,17 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        -1168,
-        -160
+        -1504,
+        352
       ],
-      "id": "8f8c6403-059e-46f0-9c19-ee9c5013915c",
+      "id": "3d1396af-fdf1-47ce-bbd2-1b155c4ddfcb",
       "name": "Message a model",
       "retryOnFail": true,
       "waitBetweenTries": 5000,
       "maxTries": 5,
       "credentials": {
         "googlePalmApi": {
-          "id": "E2M9PNgT9PMAmgHP",
+          "id": "REqu3zuG0i0J23u0",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -199,10 +201,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -736,
-        48
+        -1072,
+        560
       ],
-      "id": "c0efcbad-58b4-4176-8e91-08e6c96ade5c",
+      "id": "b1ed5667-f6dc-4f13-9cae-f3589144f1b5",
       "name": "Code in JavaScript"
     },
     {
@@ -258,10 +260,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -288,
-        -32
+        -624,
+        480
       ],
-      "id": "c39c310f-b449-4462-acf1-2b38ffd4741e",
+      "id": "d6216693-b1e1-42bc-9676-d53203ed2345",
       "name": "Edit Fields"
     },
     {
@@ -269,7 +271,7 @@
         "operation": "download",
         "fileId": {
           "__rl": true,
-          "value": "https://drive.google.com/file/d/1PLSPd0FWI8OuHPHg_kofLXV-C4qItgWY/view?usp=sharing",
+          "value": "https://drive.google.com/file/d/10WF4OSGl0w7ut8G3svEIxmwt9dz74iDm/view?usp=sharing",
           "mode": "url"
         },
         "options": {}
@@ -277,89 +279,14 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        160,
-        176
+        -176,
+        464
       ],
-      "id": "41655350-f07b-48c8-b7e9-fc231fb1ff81",
-      "name": "Full CV",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "0jNwrbXnRopBBBAC",
-          "name": "Google Drive account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "https://drive.google.com/file/d/1-8dtnLOxFS7DU6hxJfUk0tMtqp_oH0ql/view?usp=sharing",
-          "mode": "url"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        160,
-        -48
-      ],
-      "id": "e643edb8-c751-4b46-882d-573e519fdf5e",
+      "id": "5676bb84-a046-4b3f-9297-d1cfd0e1c9f3",
       "name": "Data Analytics",
       "credentials": {
         "googleDriveOAuth2Api": {
-          "id": "0jNwrbXnRopBBBAC",
-          "name": "Google Drive account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "https://drive.google.com/file/d/1AOkw9q3wraMQNSc6DcP6udlDR41ycoe4/view?usp=drive_link",
-          "mode": "url"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        160,
-        -240
-      ],
-      "id": "15de0909-fbff-4d7a-af08-4cfd159aefda",
-      "name": "ML / Data Science",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "0jNwrbXnRopBBBAC",
-          "name": "Google Drive account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "https://drive.google.com/file/d/1UDOAkzLP1MeaxR652MgM7Js7dj8T4uhA/view?usp=sharing",
-          "mode": "url"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        160,
-        -496
-      ],
-      "id": "2071606c-f271-448d-8646-622a2bea9d71",
-      "name": "Al Jobs",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "0jNwrbXnRopBBBAC",
+          "id": "iegpFmpC8UmasVL4",
           "name": "Google Drive account"
         }
       }
@@ -392,10 +319,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1632,
-        -48
+        -2256,
+        464
       ],
-      "id": "d2787f9c-867e-438d-9c2f-ab4e72bb9947",
+      "id": "3cba9e08-e669-49c9-8b16-045f874ded84",
       "name": "If"
     },
     {
@@ -410,23 +337,23 @@
         },
         "text": "=You are an expert data extractor. Analyze the following job post Image and extract the job title, company name, company email, jobUrl (if any)  and the full job description (cleaned of any extra text like 'About Us' if it's not relevant but try to return the main points only from job description).\n\nJob Post Text:\n{{ $json['Job Description'] }}\n\nRespond in this exact JSON format:\n{\n  \"jobTitle\": \"...\",\n  \"companyName\": \"...\",\n  \"CompanyEmail\": \"...\",\n  \"jobDescription\": \"...\",\n  \"Salary\": \"...\"\n}",
         "inputType": "binary",
-        "binaryPropertyName": "Image_or_pdf_of_job_description",
+        "binaryPropertyName": "={{ Object.keys($binary).join(',') }}",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        -1120,
-        48
+        -1456,
+        560
       ],
-      "id": "f7db21f1-3905-4973-b8f9-0708ded6b6d3",
+      "id": "d2631363-5acb-47ad-b2dc-ec906045be7f",
       "name": "Analyze an image",
       "retryOnFail": true,
       "waitBetweenTries": 5000,
       "maxTries": 5,
       "credentials": {
         "googlePalmApi": {
-          "id": "E2M9PNgT9PMAmgHP",
+          "id": "REqu3zuG0i0J23u0",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -510,10 +437,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.3,
       "position": [
-        -1456,
-        160
+        -1776,
+        672
       ],
-      "id": "068d82e2-3acc-4f12-a06c-a1b9262f3484",
+      "id": "27f9eb6c-027a-4ab6-91ca-171ae290d369",
       "name": "Switch1"
     },
     {
@@ -527,23 +454,23 @@
         },
         "text": "=You are an expert data extractor. Analyze the following job post document and extract the job title, company name, company email, jobUrl (if any)  and the full job description (cleaned of any extra text like 'About Us' if it's not relevant but try to return the main points only from job description).\n\nJob Post Text:\n{{ $json['Job Description'] }}\n\nRespond in this exact JSON format:\n{\n  \"jobTitle\": \"...\",\n  \"companyName\": \"...\",\n  \"CompanyEmail\": \"...\",\n  \"jobDescription\": \"...\",\n  \"Salary\": \"...\"\n}",
         "inputType": "binary",
-        "binaryPropertyName": "Image_or_pdf_of_job_description",
+        "binaryPropertyName": "={{ Object.keys($binary).join(',') }}",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        -1120,
-        256
+        -1456,
+        768
       ],
-      "id": "6d043036-82c8-44dd-a8ad-edc01a72b61b",
+      "id": "5dfda3b3-c2dd-426b-a3cc-8ed50eedd4aa",
       "name": "Analyze document",
       "retryOnFail": true,
       "waitBetweenTries": 5000,
       "maxTries": 5,
       "credentials": {
         "googlePalmApi": {
-          "id": "E2M9PNgT9PMAmgHP",
+          "id": "REqu3zuG0i0J23u0",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -556,10 +483,10 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        336,
-        -48
+        0,
+        464
       ],
-      "id": "6b4ba818-9e64-4116-9319-a9056fe33c20",
+      "id": "960e0aa6-2ed8-489c-9ff0-171885d783e2",
       "name": "Extract from File"
     },
     {
@@ -570,10 +497,10 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        336,
-        -240
+        0,
+        272
       ],
-      "id": "71cc23cd-fc59-47c5-9fdf-fb6130178da3",
+      "id": "63772371-2264-451c-b27a-3e303bd0f835",
       "name": "Extract from File1"
     },
     {
@@ -584,10 +511,10 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        336,
-        -512
+        0,
+        0
       ],
-      "id": "2b7c1f5c-5bbc-4b23-bf12-677ec4e4c675",
+      "id": "600d7546-3257-4739-aa3f-e4d7463ddfb6",
       "name": "Extract from File2"
     },
     {
@@ -608,15 +535,15 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        1936,
-        -480
+        1600,
+        32
       ],
-      "id": "9b7ff440-119f-42c0-9bc2-7969aadc3156",
+      "id": "e994975c-77a5-4941-9636-e8fbe1e15b0b",
       "name": "Send a message",
       "webhookId": "d0052178-eb65-491b-960c-23be904b588f",
       "credentials": {
         "gmailOAuth2": {
-          "id": "WNKh4ftUPg25TT4b",
+          "id": "2YIEiaojyidbIUHa",
           "name": "Gmail account"
         }
       }
@@ -687,10 +614,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1296,
-        -480
+        960,
+        32
       ],
-      "id": "188d1dc8-23a2-4d3c-bc53-eb259a0e9a22",
+      "id": "a147c16a-6526-4335-a7e7-80a11f3e600f",
       "name": "Edit Fields3"
     },
     {
@@ -752,10 +679,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        528,
-        -512
+        192,
+        0
       ],
-      "id": "f583f816-51ad-47d6-8432-bdfe63102e25",
+      "id": "638bef9e-5fc7-4e03-9a57-7c3c733c6a45",
       "name": "Edit Fields4"
     },
     {
@@ -765,10 +692,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1120,
-        -480
+        784,
+        32
       ],
-      "id": "cd39b2c5-5248-4a05-b09c-98a96664b928",
+      "id": "027261ab-2b12-4e67-bba8-368d35ba692e",
       "name": "Code in JavaScript4"
     },
     {
@@ -776,7 +703,7 @@
         "operation": "download",
         "fileId": {
           "__rl": true,
-          "value": "https://drive.google.com/file/d/1UDOAkzLP1MeaxR652MgM7Js7dj8T4uhA/view?usp=sharing",
+          "value": "https://drive.google.com/file/d/1iSJFPRbDO_9zftAOn4-regAKCTnt-Uo3/view?usp=drive_link",
           "mode": "url"
         },
         "options": {}
@@ -784,14 +711,14 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        1472,
-        -464
+        1136,
+        48
       ],
-      "id": "2a8157e9-fb22-450c-ac11-96c68012b1c5",
+      "id": "35211663-ee5b-4cda-b059-0461cac0cff8",
       "name": "Al Jobs1",
       "credentials": {
         "googleDriveOAuth2Api": {
-          "id": "0jNwrbXnRopBBBAC",
+          "id": "iegpFmpC8UmasVL4",
           "name": "Google Drive account"
         }
       }
@@ -800,14 +727,14 @@
       "parameters": {
         "modelId": {
           "__rl": true,
-          "value": "models/gemini-2.5-flash",
+          "value": "models/gemini-3.1-flash-lite",
           "mode": "list",
-          "cachedResultName": "models/gemini-2.5-flash"
+          "cachedResultName": "models/gemini-3.1-flash-lite"
         },
         "messages": {
           "values": [
             {
-              "content": "=You are an expert career assistant. Your task is to write a highly professional, concise, and personalized email for a job application.\n\nYour primary goal is to *synthesize* the company's needs (from the `Job Description`) with my qualifications (from `My Resume Text`), demonstrating a clear and specific match.\n\n**Context:**\n* **My Resume Text:**\n    {{ $json.text }}\n* **Job Title:**\n    {{ $json.jobTitle }}\n* **Company Name:**\n    {{ $json.companyName }}\n* **Job Description:**\n    {{ $json.jobDescription }}\n\n**Instructions:**\n1.  **Be Professional and Specific:** Address the hiring team (e.g., \"Dear {{ $json.companyName }} Team,\" or \"Dear Hiring Manager,\"). Clearly state the `jobTitle` I am applying for.\n2.  **Focus on the Match (Most Important):** Do not just list my skills. Instead, pick 1-2 key requirements from the `Job Description` and show how my experience from `My Resume Text` directly fulfills those requirements.\n    * **Good Example:** \"I see you require 3+ years of automation testing. In my role at [My Past Company], I successfully designed and implemented an automation framework using [My Skill] that reduced testing time by 30%.\"\n    * **Bad Example:** \"My resume shows I have skills in Python, SQL, and automation.\"\n3.  **Keep it Concise:** 3-4 short paragraphs maximum.\n4.  **Conclude Professionally:** Conclude by stating that my resume is attached for their review and that I am eager to discuss how I can contribute to their team. Do **not** mention the resume's file name (e.g., \"AI_Resume\").\n5. also in signature or in the in end of email add my portfolio link - https://yamins-portfolio.vercel.app/\nand whatsapp and phone - +8801977940357\nLinkedIn - www.linkedin.com/in/yamin-hossain-38a3b3263\nFacebook - https://www.facebook.com/share/1Bidi7iNfK/\nfacebook and Linkedln add when needed\n\n\n**Output Format:**\nRespond with ONLY a valid JSON object in this exact format:\n{\n  \"Subject\": \"Application for {{ $json.jobTitle }} - Yamin Hossain\",\n  \"emailBody\": \"...\"\n}"
+              "content": "=You are an expert technical recruiter, career strategist, and professional job-application writer.\n\nYour task is to write a highly personalized, concise, credible, and professional job-application email by analyzing BOTH the Job Description and the candidate's Resume Text.\n\nThe goal is NOT to summarize the resume.\n\nThe goal is to identify the strongest overlap between what the company needs and what the candidate has actually demonstrated, then communicate that match naturally and convincingly.\n\n========================\nINPUTS\n========================\n\nCandidate Resume:\n{{ $json.text }}\n\nJob Title:\n{{ $json.jobTitle }}\n\nCompany:\n{{ $json.companyName }}\n\nJob Description:\n{{ $json.jobDescription }}\n\n========================\nINTERNAL REASONING PROCESS\n========================\n\nBefore writing the email, silently perform the following analysis:\n\n1. Identify the 2-4 most important responsibilities, technical requirements, or qualifications in the Job Description.\n\n2. Search the Resume Text for DIRECT evidence that the candidate has performed similar work.\n   - Prioritize actual professional experience, projects, research, publications, measurable achievements, and relevant technical implementations.\n   - Prefer evidence that closely matches the role's responsibilities rather than simply matching keywords.\n\n3. Rank the strongest matches by relevance.\n   Choose only the 1-2 strongest matches for the email.\n\n4. For each selected match, establish this relationship:\n\n   COMPANY NEED → CANDIDATE'S PROVEN EXPERIENCE → RELEVANT TECHNOLOGY/RESULT\n\n   Example:\n   If the company needs production AI systems and the resume shows that the candidate built and deployed RAG/LLM applications, explain that connection directly.\n\n5. Identify the candidate's most credible differentiator for this specific position.\n   This could be:\n   - production software engineering experience\n   - AI/ML development\n   - backend engineering\n   - LLM/RAG systems\n   - research/publications\n   - system design\n   - cloud/deployment\n   - relevant domain experience\n   - measurable engineering impact\n\n6. Adapt the emphasis based on the job:\n   - For AI/ML roles: emphasize relevant AI/ML systems, LLMs, RAG, model development, evaluation, deployment, or research.\n   - For backend/software roles: emphasize APIs, distributed systems, backend architecture, databases, testing, deployment, and production engineering.\n   - For research roles: emphasize publications, research work, experimentation, technical depth, and relevant academic interests.\n   - For full-stack roles: emphasize end-to-end product development and frontend/backend integration.\n   - For other roles: prioritize whatever experience most directly satisfies the JD.\n\n7. DO NOT invent information.\n   Every factual claim about the candidate must be supported by the Resume Text.\n   Do not invent:\n   - years of experience\n   - technologies\n   - job responsibilities\n   - achievements\n   - metrics\n   - company names\n   - education\n   - certifications\n   - publications\n   - project outcomes\n\n8. If the Job Description contains a requirement that is not clearly supported by the resume, do NOT pretend that the candidate has it. Instead, focus on the closest genuine transferable experience.\n\n9. Do not mechanically repeat keywords from the Job Description. The email should sound like a thoughtful human application, not an ATS keyword dump.\n\n========================\nEMAIL WRITING REQUIREMENTS\n========================\n\nWrite a concise application email of approximately 150-220 words.\n\nStructure:\n\nParagraph 1:\n- Address the company professionally.\n- Clearly state the candidate is applying for the specific Job Title.\n- Briefly establish why the role is relevant to the candidate.\n\nParagraph 2:\n- Highlight the strongest match between the company's needs and the candidate's experience.\n- Use specific evidence from the resume.\n- Explain the relevance instead of simply listing technologies.\n\nParagraph 3:\n- Highlight a second complementary match or differentiator if genuinely useful.\n- Keep it concise.\n- If the candidate has research/publication experience and it is relevant to the position, use it naturally rather than forcing it into the email.\n\nParagraph 4:\n- State that the resume is attached for review.\n- Express interest in discussing how the candidate could contribute to the team.\n- End professionally.\n\n========================\nSTYLE\n========================\n\nThe email must be:\n\n- Professional\n- Concise\n- Confident but not arrogant\n- Specific rather than generic\n- Natural and human-written\n- Technically credible\n- Personalized to the company and role\n- Easy for a recruiter or hiring manager to scan quickly\n\nAvoid exaggerated language such as:\n- \"I am the perfect candidate\"\n- \"I am extremely passionate\"\n- \"I am the ideal fit\"\n- \"I would be an invaluable asset\"\n- \"dream company\"\n- \"thrilled beyond words\"\n\nAvoid generic statements such as:\n- \"I have strong communication skills.\"\n- \"I am a hardworking individual.\"\n- \"I have experience in many technologies.\"\n- \"I believe my skills make me a good fit.\"\n\nInstead, demonstrate fit through concrete evidence.\n\nDo not restate the entire job description.\n\nDo not turn the email into a cover letter.\n\nDo not use more than 2-3 technical technologies in a single sentence unless necessary.\n\nDo not mention that the email was generated or analyzed.\n\n========================\nSIGNATURE\n========================\n\nUse this signature:\n\nBest regards,\nYamin Hossain\nPortfolio: https://yaminhossain.com/\nPhone / WhatsApp: +8801977940357\n\nInclude LinkedIn only when it adds value for the particular application, especially for:\n- software engineering\n- AI/ML\n- research\n- technical roles\n\nLinkedIn:\nhttps://www.linkedin.com/in/yamin-hossain-38a3b3263\n\nInclude Facebook only when clearly appropriate. Do not include Facebook by default.\n\nFacebook:\nhttps://www.facebook.com/share/1Bidi7iNfK/\n\n========================\nFINAL OUTPUT\n========================\n\nReturn ONLY one valid JSON object.\n\nUse exactly this structure:\n\n{\n  \"Subject\": \"Application for {{ $json.jobTitle }} - Yamin Hossain\",\n  \"emailBody\": \"...\"\n}\n\nIMPORTANT JSON RULES:\n\n- Return valid JSON only.\n- Do not wrap the JSON in Markdown code fences.\n- Do not include analysis, explanations, or comments outside the JSON.\n- Escape quotation marks and newline characters correctly so the result is valid JSON.\n- The emailBody must contain the complete email including greeting and signature.\n- Do not mention the resume's filename.\n- Do not use placeholder text in the final email."
             }
           ]
         },
@@ -816,17 +743,17 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        768,
-        -480
+        432,
+        32
       ],
-      "id": "5e40f47a-3945-4d61-ab96-47980c2ad3a3",
+      "id": "1482b582-2536-47dc-a257-3b69b9e85671",
       "name": "Message a model2",
       "retryOnFail": true,
       "waitBetweenTries": 5000,
       "maxTries": 5,
       "credentials": {
         "googlePalmApi": {
-          "id": "E2M9PNgT9PMAmgHP",
+          "id": "REqu3zuG0i0J23u0",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -890,24 +817,24 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        544,
-        -240
+        208,
+        272
       ],
-      "id": "a36558c5-b283-4603-a200-0c2de57d3c55",
+      "id": "9c070116-c2b2-44a3-9d57-33d46a7c9294",
       "name": "Edit Fields5"
     },
     {
       "parameters": {
         "modelId": {
           "__rl": true,
-          "value": "models/gemini-2.5-flash",
+          "value": "models/gemini-3.1-flash-lite",
           "mode": "list",
-          "cachedResultName": "models/gemini-2.5-flash"
+          "cachedResultName": "models/gemini-3.1-flash-lite"
         },
         "messages": {
           "values": [
             {
-              "content": "=You are an expert career assistant. Your task is to write a highly professional, concise, and personalized email for a job application.\n\nYour primary goal is to *synthesize* the company's needs (from the `Job Description`) with my qualifications (from `My Resume Text`), demonstrating a clear and specific match.\n\n**Context:**\n* **My Resume Text:**\n    {{ $json.text }}\n* **Job Title:**\n    {{ $json.jobTitle }}\n* **Company Name:**\n    {{ $json.companyName }}\n* **Job Description:**\n    {{ $json.jobDescription }}\n\n**Instructions:**\n1.  **Be Professional and Specific:** Address the hiring team (e.g., \"Dear {{ $json.companyName }} Team,\" or \"Dear Hiring Manager,\"). Clearly state the `jobTitle` I am applying for.\n2.  **Focus on the Match (Most Important):** Do not just list my skills. Instead, pick 1-2 key requirements from the `Job Description` and show how my experience from `My Resume Text` directly fulfills those requirements.\n    * **Good Example:** \"I see you require 3+ years of automation testing. In my role at [My Past Company], I successfully designed and implemented an automation framework using [My Skill] that reduced testing time by 30%.\"\n    * **Bad Example:** \"My resume shows I have skills in Python, SQL, and automation.\"\n3.  **Keep it Concise:** 3-4 short paragraphs maximum.\n4.  **Conclude Professionally:** Conclude by stating that my resume is attached for their review and that I am eager to discuss how I can contribute to their team. Do **not** mention the resume's file name (e.g., \"Ml_resume\").\n5. also in signature or in the in end of email add my portfolio link - https://yamins-portfolio.vercel.app/\nand whatsapp and phone - +8801977940357\nLinkedIn - www.linkedin.com/in/yamin-hossain-38a3b3263\nFacebook - https://www.facebook.com/share/1Bidi7iNfK/\nfacebook and Linkedln add when needed\n\n**Output Format:**\nRespond with ONLY a valid JSON object in this exact format:\n{\n  \"Subject\": \"Application for {{ $json.jobTitle }} - Yamin Hossain\",\n  \"emailBody\": \"...\"\n}"
+              "content": "=You are an expert technical recruiter, career strategist, and professional job-application writer.\n\nYour task is to write a highly personalized, concise, credible, and professional job-application email by analyzing BOTH the Job Description and the candidate's Resume Text.\n\nThe goal is NOT to summarize the resume.\n\nThe goal is to identify the strongest overlap between what the company needs and what the candidate has actually demonstrated, then communicate that match naturally and convincingly.\n\n========================\nINPUTS\n========================\n\nCandidate Resume:\n{{ $json.text }}\n\nJob Title:\n{{ $json.jobTitle }}\n\nCompany:\n{{ $json.companyName }}\n\nJob Description:\n{{ $json.jobDescription }}\n\n========================\nINTERNAL REASONING PROCESS\n========================\n\nBefore writing the email, silently perform the following analysis:\n\n1. Identify the 2-4 most important responsibilities, technical requirements, or qualifications in the Job Description.\n\n2. Search the Resume Text for DIRECT evidence that the candidate has performed similar work.\n   - Prioritize actual professional experience, projects, research, publications, measurable achievements, and relevant technical implementations.\n   - Prefer evidence that closely matches the role's responsibilities rather than simply matching keywords.\n\n3. Rank the strongest matches by relevance.\n   Choose only the 1-2 strongest matches for the email.\n\n4. For each selected match, establish this relationship:\n\n   COMPANY NEED → CANDIDATE'S PROVEN EXPERIENCE → RELEVANT TECHNOLOGY/RESULT\n\n   Example:\n   If the company needs production AI systems and the resume shows that the candidate built and deployed RAG/LLM applications, explain that connection directly.\n\n5. Identify the candidate's most credible differentiator for this specific position.\n   This could be:\n   - production software engineering experience\n   - AI/ML development\n   - backend engineering\n   - LLM/RAG systems\n   - research/publications\n   - system design\n   - cloud/deployment\n   - relevant domain experience\n   - measurable engineering impact\n\n6. Adapt the emphasis based on the job:\n   - For AI/ML roles: emphasize relevant AI/ML systems, LLMs, RAG, model development, evaluation, deployment, or research.\n   - For backend/software roles: emphasize APIs, distributed systems, backend architecture, databases, testing, deployment, and production engineering.\n   - For research roles: emphasize publications, research work, experimentation, technical depth, and relevant academic interests.\n   - For full-stack roles: emphasize end-to-end product development and frontend/backend integration.\n   - For other roles: prioritize whatever experience most directly satisfies the JD.\n\n7. DO NOT invent information.\n   Every factual claim about the candidate must be supported by the Resume Text.\n   Do not invent:\n   - years of experience\n   - technologies\n   - job responsibilities\n   - achievements\n   - metrics\n   - company names\n   - education\n   - certifications\n   - publications\n   - project outcomes\n\n8. If the Job Description contains a requirement that is not clearly supported by the resume, do NOT pretend that the candidate has it. Instead, focus on the closest genuine transferable experience.\n\n9. Do not mechanically repeat keywords from the Job Description. The email should sound like a thoughtful human application, not an ATS keyword dump.\n\n========================\nEMAIL WRITING REQUIREMENTS\n========================\n\nWrite a concise application email of approximately 150-220 words.\n\nStructure:\n\nParagraph 1:\n- Address the company professionally.\n- Clearly state the candidate is applying for the specific Job Title.\n- Briefly establish why the role is relevant to the candidate.\n\nParagraph 2:\n- Highlight the strongest match between the company's needs and the candidate's experience.\n- Use specific evidence from the resume.\n- Explain the relevance instead of simply listing technologies.\n\nParagraph 3:\n- Highlight a second complementary match or differentiator if genuinely useful.\n- Keep it concise.\n- If the candidate has research/publication experience and it is relevant to the position, use it naturally rather than forcing it into the email.\n\nParagraph 4:\n- State that the resume is attached for review.\n- Express interest in discussing how the candidate could contribute to the team.\n- End professionally.\n\n========================\nSTYLE\n========================\n\nThe email must be:\n\n- Professional\n- Concise\n- Confident but not arrogant\n- Specific rather than generic\n- Natural and human-written\n- Technically credible\n- Personalized to the company and role\n- Easy for a recruiter or hiring manager to scan quickly\n\nAvoid exaggerated language such as:\n- \"I am the perfect candidate\"\n- \"I am extremely passionate\"\n- \"I am the ideal fit\"\n- \"I would be an invaluable asset\"\n- \"dream company\"\n- \"thrilled beyond words\"\n\nAvoid generic statements such as:\n- \"I have strong communication skills.\"\n- \"I am a hardworking individual.\"\n- \"I have experience in many technologies.\"\n- \"I believe my skills make me a good fit.\"\n\nInstead, demonstrate fit through concrete evidence.\n\nDo not restate the entire job description.\n\nDo not turn the email into a cover letter.\n\nDo not use more than 2-3 technical technologies in a single sentence unless necessary.\n\nDo not mention that the email was generated or analyzed.\n\n========================\nSIGNATURE\n========================\n\nUse this signature:\n\nBest regards,\nYamin Hossain\nPortfolio: https://yaminhossain.com/\nPhone / WhatsApp: +8801977940357\n\nInclude LinkedIn only when it adds value for the particular application, especially for:\n- software engineering\n- AI/ML\n- research\n- technical roles\n\nLinkedIn:\nhttps://www.linkedin.com/in/yamin-hossain-38a3b3263\n\nInclude Facebook only when clearly appropriate. Do not include Facebook by default.\n\nFacebook:\nhttps://www.facebook.com/share/1Bidi7iNfK/\n\n========================\nFINAL OUTPUT\n========================\n\nReturn ONLY one valid JSON object.\n\nUse exactly this structure:\n\n{\n  \"Subject\": \"Application for {{ $json.jobTitle }} - Yamin Hossain\",\n  \"emailBody\": \"...\"\n}\n\nIMPORTANT JSON RULES:\n\n- Return valid JSON only.\n- Do not wrap the JSON in Markdown code fences.\n- Do not include analysis, explanations, or comments outside the JSON.\n- Escape quotation marks and newline characters correctly so the result is valid JSON.\n- The emailBody must contain the complete email including greeting and signature.\n- Do not mention the resume's filename.\n- Do not use placeholder text in the final email."
             }
           ]
         },
@@ -916,17 +843,17 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        752,
-        -256
+        416,
+        256
       ],
-      "id": "6753c695-a884-40d4-8298-f357eb3884fc",
+      "id": "599849a5-a3b4-4d58-8113-ce6368fc2e33",
       "name": "Message a model3",
       "retryOnFail": true,
       "waitBetweenTries": 5000,
       "maxTries": 5,
       "credentials": {
         "googlePalmApi": {
-          "id": "E2M9PNgT9PMAmgHP",
+          "id": "REqu3zuG0i0J23u0",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -938,10 +865,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1120,
-        -256
+        784,
+        256
       ],
-      "id": "da789e49-da59-4361-8420-1adfe7c7157f",
+      "id": "d2e2a477-dc99-4bbd-a203-c9d44a647b18",
       "name": "Code in JavaScript5"
     },
     {
@@ -1010,36 +937,11 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1312,
-        -256
+        976,
+        256
       ],
-      "id": "4cb4daf2-b7a1-401a-95fc-17aec50d1bf8",
+      "id": "b3a7fa7e-3108-4278-a1c4-4a2a33f43b43",
       "name": "Edit Fields6"
-    },
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "https://drive.google.com/file/d/1AOkw9q3wraMQNSc6DcP6udlDR41ycoe4/view?usp=drive_link",
-          "mode": "url"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        1488,
-        -272
-      ],
-      "id": "45b40950-20fa-4dc0-b1af-3a820b649328",
-      "name": "ML / Data Science1",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "0jNwrbXnRopBBBAC",
-          "name": "Google Drive account"
-        }
-      }
     },
     {
       "parameters": {
@@ -1100,24 +1002,24 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        544,
-        -48
+        208,
+        464
       ],
-      "id": "b823b788-56c3-427e-bb8c-d45e7ecb6a21",
+      "id": "c6a3efc7-e157-44bf-9baf-84b3e9f2291b",
       "name": "Edit Fields7"
     },
     {
       "parameters": {
         "modelId": {
           "__rl": true,
-          "value": "models/gemini-2.5-flash",
+          "value": "models/gemini-3.1-flash-lite",
           "mode": "list",
-          "cachedResultName": "models/gemini-2.5-flash"
+          "cachedResultName": "models/gemini-3.1-flash-lite"
         },
         "messages": {
           "values": [
             {
-              "content": "=You are an expert career assistant. Your task is to write a highly professional, concise, and personalized email for a job application.\n\nYour primary goal is to *synthesize* the company's needs (from the `Job Description`) with my qualifications (from `My Resume Text`), demonstrating a clear and specific match.\n\n**Context:**\n* **My Resume Text:**\n    {{ $json.text }}\n* **Job Title:**\n    {{ $json.jobTitle }}\n* **Company Name:**\n    {{ $json.companyName }}\n* **Job Description:**\n    {{ $json.jobDescription }}\n\n**Instructions:**\n1.  **Be Professional and Specific:** Address the hiring team (e.g., \"Dear {{ $json.companyName }} Team,\" or \"Dear Hiring Manager,\"). Clearly state the `jobTitle` I am applying for.\n2.  **Focus on the Match (Most Important):** Do not just list my skills. Instead, pick 1-2 key requirements from the `Job Description` and show how my experience from `My Resume Text` directly fulfills those requirements.\n    * **Good Example:** \"I see you require 3+ years of automation testing. In my role at [My Past Company], I successfully designed and implemented an automation framework using [My Skill] that reduced testing time by 30%.\"\n    * **Bad Example:** \"My resume shows I have skills in Python, SQL, and automation.\"\n3.  **Keep it Concise:** 3-4 short paragraphs maximum.\n4.  **Conclude Professionally:** Conclude by stating that my resume is attached for their review and that I am eager to discuss how I can contribute to their team. Do **not** mention the resume's file name (e.g., \"Dat_Resume\").\n5. also in signature or in the in end of email add my portfolio link - https://yamins-portfolio.vercel.app/\nand whatsapp and phone - +8801977940357\nLinkedIn - www.linkedin.com/in/yamin-hossain-38a3b3263\nFacebook - https://www.facebook.com/share/1Bidi7iNfK/\nfacebook and Linkedln add when needed\n\n**Output Format:**\nRespond with ONLY a valid JSON object in this exact format:\n{\n  \"Subject\": \"Application for {{ $json.jobTitle }} - Yamin Hossain\",\n  \"emailBody\": \"...\"\n}"
+              "content": "=You are an expert career assistant specializing in writing concise, high-conversion job application emails.\n\nYour task is to write a highly professional, concise, personalized, and evidence-based email for a job application by synthesizing the company's requirements from the Job Description with the candidate's actual qualifications from the Resume Text.\n\nINPUTS:\n- Resume Text: {{ $json.text }}\n- Job Title: {{ $json.jobTitle }}\n- Company Name: {{ $json.companyName }}\n- Job Description: {{ $json.jobDescription }}\n\nINSTRUCTIONS:\n\n1. OPENING\n- Address the recipient naturally:\n  \"Dear {{ $json.companyName }} Team,\"\n  or \"Dear Hiring Manager,\"\n- Clearly state that I am applying for the {{ $json.jobTitle }} position at {{ $json.companyName }}.\n- Avoid generic openings such as \"I hope you are doing well.\"\n\n2. PERSONALIZATION & REQUIREMENT MATCH — MOST IMPORTANT\n- Carefully analyze the Job Description and identify the 1–2 most important requirements, responsibilities, or problems the company needs this role to solve.\n- Then identify specific evidence from my Resume Text that directly demonstrates my ability to meet those requirements.\n- Connect the requirement to my experience instead of merely listing skills.\n\nGOOD:\n\"Your role emphasizes building AI-powered applications with Python and LLM technologies. In my software engineering experience, I have worked on AI-driven applications involving RAG, embeddings, and LLM API integrations, giving me practical experience aligned with this requirement.\"\n\nBAD:\n\"I have skills in Python, AI, RAG, SQL, and machine learning.\"\n\n- Prioritize concrete experience, projects, achievements, technologies, responsibilities, or measurable results that actually appear in the Resume Text.\n- Never invent employers, projects, years of experience, achievements, metrics, technologies, responsibilities, or qualifications that are not supported by the Resume Text.\n- If the Job Description asks for something I do not have, do not falsely claim it. Instead, emphasize the closest relevant transferable experience when appropriate.\n- Do not force an exact match if the evidence is weak.\n\n3. CANDIDATE POSITIONING\n- Present me as a strong, relevant candidate based on evidence from my resume.\n- Emphasize the intersection between what the company needs and what I have already done.\n- For technical roles, prioritize relevant engineering/AI/ML/software development experience over unrelated academic projects.\n- For data roles, prioritize analytics, SQL, Python, visualization, machine learning, reporting, and business-impact experience where relevant.\n- For AI/ML roles, prioritize LLMs, RAG, embeddings, machine learning, deep learning, model development, APIs, deployment, and relevant research/projects where supported by the resume.\n- Mention education only when it strengthens the match.\n\n4. EMAIL LENGTH & STYLE\n- Maximum 3–4 short paragraphs.\n- Keep the email concise enough to be read in under one minute.\n- Use polished, natural business English.\n- Sound confident and professional, but not exaggerated, desperate, or overly flattering.\n- Avoid buzzword-heavy language and generic statements such as:\n  \"I am the perfect candidate,\"\n  \"I am passionate about your amazing company,\"\n  \"I believe my skills make me an ideal fit,\"\n  unless supported by specific evidence.\n- Do not repeat the entire resume.\n- Do not use bullet points inside the email.\n- Do not mention that AI was used to write the email.\n\n5. CLOSING\n- State that my resume is attached for their review.\n- Express interest in discussing how my experience can contribute to the team.\n- End with a professional signature.\n\n6. CONTACT INFORMATION\nAlways include:\nYamin Hossain\nPhone / WhatsApp: +8801977940357\nPortfolio: https://www.yaminhossain.fun/\n\nInclude LinkedIn only when it is relevant and useful for the specific application:\nLinkedIn: https://www.linkedin.com/in/yamin-hossain-38a3b3263\n\nInclude Facebook only when clearly appropriate for the application or when the company/job context makes a social profile useful:\nFacebook: https://www.facebook.com/share/1Bidi7iNfK/\n\nDo not include both LinkedIn and Facebook by default. Portfolio + Phone/WhatsApp should always be included.\n\n7. IMPORTANT ACCURACY RULES\n- Use only information contained in the provided Resume Text and Job Description.\n- Do not assume the candidate has experience merely because a technology appears in the Job Description.\n- Do not fabricate years of experience.\n- Do not fabricate numerical achievements.\n- Do not claim current employment unless supported by the Resume Text.\n- Do not claim relocation, visa status, work authorization, salary expectations, availability, or notice period unless explicitly provided.\n- If the resume contains multiple experiences, select only the experiences most relevant to this specific Job Description.\n- Avoid mentioning irrelevant projects or technologies simply to fill space.\n\n8. SUBJECT\nUse exactly:\n\"Application for {{ $json.jobTitle }} - Yamin Hossain\"\n\n9. OUTPUT FORMAT\nRespond with ONLY a valid JSON object. Do not include Markdown, code fences, explanations, or text outside the JSON object.\n\nThe JSON must have exactly these two keys:\n{\n  \"Subject\": \"Application for {{ $json.jobTitle }} - Yamin Hossain\",\n  \"emailBody\": \"...\"\n}\n\n10. JSON VALIDITY\n- The output must be valid JSON.\n- Escape all double quotes inside emailBody.\n- Represent paragraph breaks using \\n\\n.\n- Do not include trailing commas.\n- Do not use Markdown formatting in the emailBody.\n- Do not include HTML.\n\nBefore generating the final email, internally compare the Job Description against the Resume Text and select the strongest 1–2 evidence-based matches. The final email should make those matches immediately obvious to the hiring manager."
             }
           ]
         },
@@ -1126,17 +1028,17 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        752,
-        -48
+        416,
+        464
       ],
-      "id": "4775fc78-b1ce-47d5-ba38-21efb5cc3e92",
+      "id": "6e63c8f6-6a63-4bd7-859d-cce4bffb1853",
       "name": "Message a model4",
       "retryOnFail": true,
       "waitBetweenTries": 5000,
       "maxTries": 5,
       "credentials": {
         "googlePalmApi": {
-          "id": "E2M9PNgT9PMAmgHP",
+          "id": "REqu3zuG0i0J23u0",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -1148,10 +1050,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1120,
-        -48
+        784,
+        464
       ],
-      "id": "3da362af-af98-4580-aa5f-b47a32c36b40",
+      "id": "d72e24bb-dd3a-4ddd-9d7c-9ebce47f87a8",
       "name": "Code in JavaScript6"
     },
     {
@@ -1220,10 +1122,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1312,
-        -64
+        976,
+        448
       ],
-      "id": "7ae16e86-5171-4612-a6cd-3e6c072f93e4",
+      "id": "8b8fcbec-6c17-4964-beec-05d14d47c955",
       "name": "Edit Fields8"
     },
     {
@@ -1231,7 +1133,7 @@
         "operation": "download",
         "fileId": {
           "__rl": true,
-          "value": "https://drive.google.com/file/d/1-8dtnLOxFS7DU6hxJfUk0tMtqp_oH0ql/view?usp=sharing",
+          "value": "https://drive.google.com/file/d/10WF4OSGl0w7ut8G3svEIxmwt9dz74iDm/view?usp=sharing",
           "mode": "url"
         },
         "options": {}
@@ -1239,14 +1141,14 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        1504,
-        -64
+        1168,
+        448
       ],
-      "id": "0be3b0dd-2f6b-4303-8a87-c1affe0099b6",
+      "id": "205ff392-bdd5-482c-9817-5c5ce2267e02",
       "name": "Data Analytics1",
       "credentials": {
         "googleDriveOAuth2Api": {
-          "id": "0jNwrbXnRopBBBAC",
+          "id": "iegpFmpC8UmasVL4",
           "name": "Google Drive account"
         }
       }
@@ -1259,10 +1161,10 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        336,
-        176
+        0,
+        688
       ],
-      "id": "289e2169-22ce-4d37-8a7a-f97a778ba3a1",
+      "id": "a9d7577c-83ed-4c98-824c-59edaaf26662",
       "name": "Extract from File3"
     },
     {
@@ -1324,24 +1226,24 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        544,
-        176
+        208,
+        688
       ],
-      "id": "0e2d6d38-e579-474d-be53-f4e02ca38d5b",
+      "id": "60203335-03c2-4901-9f2b-f5fd1de36c83",
       "name": "Edit Fields9"
     },
     {
       "parameters": {
         "modelId": {
           "__rl": true,
-          "value": "models/gemini-2.5-flash",
+          "value": "models/gemini-3.1-flash-lite",
           "mode": "list",
-          "cachedResultName": "models/gemini-2.5-flash"
+          "cachedResultName": "models/gemini-3.1-flash-lite"
         },
         "messages": {
           "values": [
             {
-              "content": "=You are an expert career assistant. Your task is to write a highly professional, concise, and personalized email for a job application.\n\nYour primary goal is to *synthesize* the company's needs (from the `Job Description`) with my qualifications (from `My Resume Text`), demonstrating a clear and specific match.\n\n**Context:**\n* **My Resume Text:**\n    {{ $json.text }}\n* **Job Title:**\n    {{ $json.jobTitle }}\n* **Company Name:**\n    {{ $json.companyName }}\n* **Job Description:**\n    {{ $json.jobDescription }}\n\n**Instructions:**\n1.  **Be Professional and Specific:** Address the hiring team (e.g., \"Dear {{ $json.companyName }} Team,\" or \"Dear Hiring Manager,\"). Clearly state the `jobTitle` I am applying for.\n2.  **Focus on the Match (Most Important):** Do not just list my skills. Instead, pick 1-2 key requirements from the `Job Description` and show how my experience from `My Resume Text` directly fulfills those requirements.\n    * **Good Example:** \"I see you require 3+ years of automation testing. In my role at [My Past Company], I successfully designed and implemented an automation framework using [My Skill] that reduced testing time by 30%.\"\n    * **Bad Example:** \"My resume shows I have skills in Python, SQL, and automation.\"\n3.  **Keep it Concise:** 3-4 short paragraphs maximum.\n4.  **Conclude Professionally:** Conclude by stating that my resume is attached for their review and that I am eager to discuss how I can contribute to their team. Do **not** mention the resume's file name (e.g., \"Dat_Resume\").\n5. also in signature or in the in end of email add my portfolio link - https://yamins-portfolio.vercel.app/\nand whatsapp and phone - +8801977940357\nLinkedIn - www.linkedin.com/in/yamin-hossain-38a3b3263\nFacebook - https://www.facebook.com/share/1Bidi7iNfK/\nfacebook and Linkedln add when needed\n\n**Output Format:**\nRespond with ONLY a valid JSON object in this exact format:\n{\n  \"Subject\": \"Application for {{ $json.jobTitle }} - Yamin Hossain\",\n  \"emailBody\": \"...\"\n}"
+              "content": "=You are an expert technical recruiter, career strategist, and professional job-application writer.\n\nYour task is to write a highly personalized, concise, credible, and professional job-application email by analyzing BOTH the Job Description and the candidate's Resume Text.\n\nThe goal is NOT to summarize the resume.\n\nThe goal is to identify the strongest overlap between what the company needs and what the candidate has actually demonstrated, then communicate that match naturally and convincingly.\n\n========================\nINPUTS\n========================\n\nCandidate Resume:\n{{ $json.text }}\n\nJob Title:\n{{ $json.jobTitle }}\n\nCompany:\n{{ $json.companyName }}\n\nJob Description:\n{{ $json.jobDescription }}\n\n========================\nINTERNAL REASONING PROCESS\n========================\n\nBefore writing the email, silently perform the following analysis:\n\n1. Identify the 2-4 most important responsibilities, technical requirements, or qualifications in the Job Description.\n\n2. Search the Resume Text for DIRECT evidence that the candidate has performed similar work.\n   - Prioritize actual professional experience, projects, research, publications, measurable achievements, and relevant technical implementations.\n   - Prefer evidence that closely matches the role's responsibilities rather than simply matching keywords.\n\n3. Rank the strongest matches by relevance.\n   Choose only the 1-2 strongest matches for the email.\n\n4. For each selected match, establish this relationship:\n\n   COMPANY NEED → CANDIDATE'S PROVEN EXPERIENCE → RELEVANT TECHNOLOGY/RESULT\n\n   Example:\n   If the company needs production AI systems and the resume shows that the candidate built and deployed RAG/LLM applications, explain that connection directly.\n\n5. Identify the candidate's most credible differentiator for this specific position.\n   This could be:\n   - production software engineering experience\n   - AI/ML development\n   - backend engineering\n   - LLM/RAG systems\n   - research/publications\n   - system design\n   - cloud/deployment\n   - relevant domain experience\n   - measurable engineering impact\n\n6. Adapt the emphasis based on the job:\n   - For AI/ML roles: emphasize relevant AI/ML systems, LLMs, RAG, model development, evaluation, deployment, or research.\n   - For backend/software roles: emphasize APIs, distributed systems, backend architecture, databases, testing, deployment, and production engineering.\n   - For research roles: emphasize publications, research work, experimentation, technical depth, and relevant academic interests.\n   - For full-stack roles: emphasize end-to-end product development and frontend/backend integration.\n   - For other roles: prioritize whatever experience most directly satisfies the JD.\n\n7. DO NOT invent information.\n   Every factual claim about the candidate must be supported by the Resume Text.\n   Do not invent:\n   - years of experience\n   - technologies\n   - job responsibilities\n   - achievements\n   - metrics\n   - company names\n   - education\n   - certifications\n   - publications\n   - project outcomes\n\n8. If the Job Description contains a requirement that is not clearly supported by the resume, do NOT pretend that the candidate has it. Instead, focus on the closest genuine transferable experience.\n\n9. Do not mechanically repeat keywords from the Job Description. The email should sound like a thoughtful human application, not an ATS keyword dump.\n\n========================\nEMAIL WRITING REQUIREMENTS\n========================\n\nWrite a concise application email of approximately 150-220 words.\n\nStructure:\n\nParagraph 1:\n- Address the company professionally.\n- Clearly state the candidate is applying for the specific Job Title.\n- Briefly establish why the role is relevant to the candidate.\n\nParagraph 2:\n- Highlight the strongest match between the company's needs and the candidate's experience.\n- Use specific evidence from the resume.\n- Explain the relevance instead of simply listing technologies.\n\nParagraph 3:\n- Highlight a second complementary match or differentiator if genuinely useful.\n- Keep it concise.\n- If the candidate has research/publication experience and it is relevant to the position, use it naturally rather than forcing it into the email.\n\nParagraph 4:\n- State that the resume is attached for review.\n- Express interest in discussing how the candidate could contribute to the team.\n- End professionally.\n\n========================\nSTYLE\n========================\n\nThe email must be:\n\n- Professional\n- Concise\n- Confident but not arrogant\n- Specific rather than generic\n- Natural and human-written\n- Technically credible\n- Personalized to the company and role\n- Easy for a recruiter or hiring manager to scan quickly\n\nAvoid exaggerated language such as:\n- \"I am the perfect candidate\"\n- \"I am extremely passionate\"\n- \"I am the ideal fit\"\n- \"I would be an invaluable asset\"\n- \"dream company\"\n- \"thrilled beyond words\"\n\nAvoid generic statements such as:\n- \"I have strong communication skills.\"\n- \"I am a hardworking individual.\"\n- \"I have experience in many technologies.\"\n- \"I believe my skills make me a good fit.\"\n\nInstead, demonstrate fit through concrete evidence.\n\nDo not restate the entire job description.\n\nDo not turn the email into a cover letter.\n\nDo not use more than 2-3 technical technologies in a single sentence unless necessary.\n\nDo not mention that the email was generated or analyzed.\n\n========================\nSIGNATURE\n========================\n\nUse this signature:\n\nBest regards,\nYamin Hossain\nPortfolio: https://yaminhossain.com/\nPhone / WhatsApp: +8801977940357\n\nInclude LinkedIn only when it adds value for the particular application, especially for:\n- software engineering\n- AI/ML\n- research\n- technical roles\n\nLinkedIn:\nhttps://www.linkedin.com/in/yamin-hossain-38a3b3263\n\nInclude Facebook only when clearly appropriate. Do not include Facebook by default.\n\nFacebook:\nhttps://www.facebook.com/share/1Bidi7iNfK/\n\n========================\nFINAL OUTPUT\n========================\n\nReturn ONLY one valid JSON object.\n\nUse exactly this structure:\n\n{\n  \"Subject\": \"Application for {{ $json.jobTitle }} - Yamin Hossain\",\n  \"emailBody\": \"...\"\n}\n\nIMPORTANT JSON RULES:\n\n- Return valid JSON only.\n- Do not wrap the JSON in Markdown code fences.\n- Do not include analysis, explanations, or comments outside the JSON.\n- Escape quotation marks and newline characters correctly so the result is valid JSON.\n- The emailBody must contain the complete email including greeting and signature.\n- Do not mention the resume's filename.\n- Do not use placeholder text in the final email."
             }
           ]
         },
@@ -1350,17 +1252,17 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        736,
-        192
+        400,
+        704
       ],
-      "id": "ed2faeba-eed2-40b3-8b04-4ad58361a070",
+      "id": "32eb5bc6-ebf5-4b6b-82c2-00155cdec86d",
       "name": "Message a model5",
       "retryOnFail": true,
       "waitBetweenTries": 5000,
       "maxTries": 5,
       "credentials": {
         "googlePalmApi": {
-          "id": "E2M9PNgT9PMAmgHP",
+          "id": "REqu3zuG0i0J23u0",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -1372,10 +1274,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1120,
-        192
+        784,
+        704
       ],
-      "id": "ac28caf3-fe4e-4244-8859-597b6d905421",
+      "id": "ebd96bc6-03fa-4464-b6fe-680f569e4b57",
       "name": "Code in JavaScript7"
     },
     {
@@ -1444,36 +1346,11 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1328,
-        192
+        992,
+        704
       ],
-      "id": "148998e8-826c-43af-b00c-874424b180ff",
+      "id": "1085caf4-f5f5-4615-8382-0544414a2fde",
       "name": "Edit Fields10"
-    },
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "https://drive.google.com/file/d/1PLSPd0FWI8OuHPHg_kofLXV-C4qItgWY/view?usp=sharing",
-          "mode": "url"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        1504,
-        176
-      ],
-      "id": "c15122fb-eff2-49f4-8cb8-03a754f8e303",
-      "name": "Full CV1",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "0jNwrbXnRopBBBAC",
-          "name": "Google Drive account"
-        }
-      }
     },
     {
       "parameters": {
@@ -1503,15 +1380,140 @@
       "type": "n8n-nodes-base.notion",
       "typeVersion": 2.2,
       "position": [
-        1936,
-        80
+        1600,
+        592
       ],
-      "id": "e7809e7d-f685-481b-a907-db345b5a9476",
+      "id": "ab7244bb-8fc0-4112-8b76-407f33a823c8",
       "name": "Append a block",
       "credentials": {
         "notionApi": {
-          "id": "wc0r92ucnGSPRrcb",
+          "id": "CJwPvN34n8KMvPLW",
           "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "https://drive.google.com/file/d/1iSJFPRbDO_9zftAOn4-regAKCTnt-Uo3/view?usp=drive_link",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -176,
+        16
+      ],
+      "id": "7fd98bf1-650e-42b8-bf23-e131ea84f3ed",
+      "name": "Yamin_AI",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "iegpFmpC8UmasVL4",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "https://drive.google.com/file/d/142fCu6WPGccTUkLFadnwkbDHTOc6JONu/view?usp=sharing",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -176,
+        272
+      ],
+      "id": "b5f76393-97b4-4a52-9116-7c8ea809d28e",
+      "name": "Yamin_AI_Jvai",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "iegpFmpC8UmasVL4",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "https://drive.google.com/file/d/142fCu6WPGccTUkLFadnwkbDHTOc6JONu/view?usp=sharing",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1152,
+        240
+      ],
+      "id": "2422bc4b-7d96-4004-9298-60ff784a5a4b",
+      "name": "Yamin_AI_Jvai1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "iegpFmpC8UmasVL4",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "https://drive.google.com/file/d/10Rj7EN_2q9JoKaFKz--N0IspHzOgiMwd/view?usp=sharing",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -176,
+        688
+      ],
+      "id": "319f5181-c8db-433b-a364-a84d64f4b0e2",
+      "name": "ATS_Resume",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "iegpFmpC8UmasVL4",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "https://drive.google.com/file/d/10Rj7EN_2q9JoKaFKz--N0IspHzOgiMwd/view?usp=sharing",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1168,
+        688
+      ],
+      "id": "86600d4c-3908-4409-a432-9eca9f0111f7",
+      "name": "ATS_Resume1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "iegpFmpC8UmasVL4",
+          "name": "Google Drive account"
         }
       }
     }
@@ -1566,14 +1568,14 @@
       "main": [
         [
           {
-            "node": "Al Jobs",
+            "node": "Yamin_AI",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "ML / Data Science",
+            "node": "Yamin_AI_Jvai",
             "type": "main",
             "index": 0
           }
@@ -1587,7 +1589,7 @@
         ],
         [
           {
-            "node": "Full CV",
+            "node": "ATS_Resume",
             "type": "main",
             "index": 0
           }
@@ -1659,44 +1661,11 @@
         ]
       ]
     },
-    "Al Jobs": {
-      "main": [
-        [
-          {
-            "node": "Extract from File2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "ML / Data Science": {
-      "main": [
-        [
-          {
-            "node": "Extract from File1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Data Analytics": {
       "main": [
         [
           {
             "node": "Extract from File",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Full CV": {
-      "main": [
-        [
-          {
-            "node": "Extract from File3",
             "type": "main",
             "index": 0
           }
@@ -1734,11 +1703,6 @@
             "index": 0
           }
         ]
-      ]
-    },
-    "Send a message": {
-      "main": [
-        []
       ]
     },
     "Edit Fields3": {
@@ -1838,23 +1802,7 @@
       "main": [
         [
           {
-            "node": "ML / Data Science1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "ML / Data Science1": {
-      "main": [
-        [
-          {
-            "node": "Send a message",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Append a block",
+            "node": "Yamin_AI_Jvai1",
             "type": "main",
             "index": 0
           }
@@ -1969,14 +1917,63 @@
       "main": [
         [
           {
-            "node": "Full CV1",
+            "node": "ATS_Resume1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Full CV1": {
+    "Yamin_AI": {
+      "main": [
+        [
+          {
+            "node": "Extract from File2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Yamin_AI_Jvai": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Yamin_AI_Jvai1": {
+      "main": [
+        [
+          {
+            "node": "Append a block",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ATS_Resume": {
+      "main": [
+        [
+          {
+            "node": "Extract from File3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ATS_Resume1": {
       "main": [
         [
           {
@@ -1996,15 +1993,18 @@
   "active": true,
   "settings": {
     "executionOrder": "v1",
-    "callerPolicy": "workflowsFromSameOwner",
+    "binaryMode": "separate",
     "availableInMCP": false,
-    "errorWorkflow": "gZ1C3YRTDxqCKsPt"
+    "timeSavedMode": "fixed",
+    "timezone": "Asia/Dhaka",
+    "callerPolicy": "workflowsFromSameOwner"
   },
-  "versionId": "d1ab5add-7e94-4043-864b-00d521f8f047",
+  "versionId": "7fc1ca65-607a-4e6b-ab88-2582674b417e",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "04411eb26930464323e8bb251dd1bb00547c7d1338f64896678ec46ead56da85"
+    "instanceId": "71f5a89213f965147ff0fbf24679b68e299bf1230d6d5fb037d9215358195b55"
   },
-  "id": "gZ1C3YRTDxqCKsPt",
+  "nodeGroups": [],
+  "id": "QizJ2dKJ2g9FR0R5",
   "tags": []
 }
